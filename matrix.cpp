@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
-const int ROW=1001;
-const int COL=1001;
+const int ROW=300;
+const int COL=300;
 //1 not obstacle 0 is obstacle
 int matrix[ROW][COL];
 bool exi(int i,int c)
