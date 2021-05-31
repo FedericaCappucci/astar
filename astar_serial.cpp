@@ -328,8 +328,8 @@ int main()
 	
 	Node dest;
 	
-	dest.Nrow=430; 
-	dest.Ncol=439;
+	dest.Nrow=4999; 
+	dest.Ncol=4997;
 	cout<< "\nscelta: " << matrix[dest.Nrow][dest.Ncol]; 
 	if(isValid(dest.Nrow,dest.Ncol)==false)
 	{
