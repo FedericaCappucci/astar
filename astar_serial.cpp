@@ -302,7 +302,7 @@ void printmatrix2()
 	   cout<<"\n";  
 	}
 	cout<<"\n";
-	endTime=omp_get_wtime();
+	//endTime=omp_get_wtime();
 	
 }
 
@@ -316,7 +316,7 @@ int main()
 	cout<<"Ncol: " <<COL<<"\n";
 	start.Nrow=0;
 	start.Ncol=3;
-	startTime=omp_get_wtime();
+	//startTime=omp_get_wtime();
 	printmatrix2();
 	
 	if(isValid(start.Nrow,start.Ncol)==false)
