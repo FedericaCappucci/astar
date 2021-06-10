@@ -96,7 +96,7 @@ bool isValid(int row, int col)
     // Returns true if row number and column number
     // is in range
     return ((row >= 0) && (row < ROW) && (col >= 0)
-           && (col < COL)) &&(matrix[row][col]!=0); //if matrix[][] =0 the is an obstacle
+           && (col < COL)) &&(matrix[row*ROW+col]!=0); //if matrix[][] =0 the is an obstacle
 }
 bool isDestination(Node succ,Node dest) 
 { 
@@ -295,7 +295,7 @@ void printmatrix2()
 	{
 	       for(int c=0;c<COL;c++)
 	       {
-	       		cout <<" "<<matrix[i][c];
+	       		cout <<" "<<matrix[i*ROW+c];
 	       	
 	       }
 	       
@@ -328,9 +328,9 @@ int main()
 	
 	Node dest;
 	
-	dest.Nrow=4999; 
-	dest.Ncol=4997;
-	cout<< "\nscelta: " << matrix[dest.Nrow][dest.Ncol]; 
+	dest.Nrow=100; 
+	dest.Ncol=195;
+	cout<< "\nscelta: " << matrix[dest.Nrow*ROW+dest.Ncol]; 
 	if(isValid(dest.Nrow,dest.Ncol)==false)
 	{
 		cout <<"Invalid destination";
