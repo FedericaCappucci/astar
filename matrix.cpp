@@ -1,14 +1,15 @@
 #include <iostream>
 using namespace std;
-const int ROW=5000;
-const int COL=5000;
+const int ROW=200;
+const int COL=200;
 //1 not obstacle 0 is obstacle
-int matrix[ROW][COL];
+//int matrix[ROW][COL];
+int *matrix= (int*) calloc(ROW*COL,sizeof(int));
 bool exi(int i,int c)
 {
 	if((i>0)&(c>0))
 	{
-		if((matrix[i-1][c]==0)||(matrix[i][c-1]==0)||(matrix[i+1][c-1]==0)||(matrix[i-1][c-1]==0))
+		if((matrix[(i-1)*ROW+c]==0)&&(matrix[i*ROW+(c-1)]==0)&&(matrix[(i+1)*ROW+(c-1)]==0)&&(matrix[(i-1)*ROW+(c-1)]==0))
 		{
 			
 			return false;
@@ -28,13 +29,13 @@ void generateMATRIX()
 		       		if((v2>=0)&(v2<50))
 		       		{
 		       			//then not obstacle
-		       			matrix[i][c]=1;
+		       			matrix[i*ROW+c]=1;
 		       			
 		       		}
 		       		else
 		       		{
 		       			//obstacle
-		       			matrix[i][c]=0;
+		       			matrix[i*ROW+c]=0;
 		       		}
 		       		exi(i,c);
 		       	}
@@ -49,10 +50,11 @@ void printmatrix()
 	{
 	       for(int c=0;c<COL;c++)
 	       {
-	       		cout <<" "<<matrix[i][c];
+	       		cout <<" "<<matrix[i*ROW+c];
 	       	
 	       }
 	     
 	}
 }
+
 
