@@ -6,11 +6,6 @@
 #include <omp.h>
 
 using namespace std;
-// Creating a shortcut for int, int pair type
-typedef pair<int, int> Pair;
-
-// Creating a shortcut for pair<int, pair<int, int>> type
-typedef pair<double, pair<int, int> > pPair;
 
 
 double startTime;
@@ -313,6 +308,7 @@ int main()
 	generateMATRIX();
 
 	Node start;
+	Node dest;
 	cout<<"Ncol: " <<COL<<"\n";
 	start.Nrow=0;
 	start.Ncol=3;
@@ -326,10 +322,17 @@ int main()
 	}
 	
 	
+
+	//Node dest;
+	generateDest();
+	dest.Nrow=destR; 
+	dest.Ncol=destC;
+
 	Node dest;
 	
 	dest.Nrow=100; 
 	dest.Ncol=195;
+
 	cout<< "\nscelta: " << matrix[dest.Nrow*ROW+dest.Ncol]; 
 	if(isValid(dest.Nrow,dest.Ncol)==false)
 	{
