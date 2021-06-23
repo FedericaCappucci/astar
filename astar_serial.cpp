@@ -160,7 +160,8 @@ void printPath(list<Node> closedList,Node start)
 	//double end=omp_get_wtime();
 	//cout<<"stampa: " << end-startTime <<"\n";
 	
-	
+	endTime=omp_get_wtime();
+        cout<< "\n\n time: " << endTime-startTime<<"\n";
 }
 int a_star(Node *start, Node *destination)
 {
@@ -280,6 +281,7 @@ int a_star(Node *start, Node *destination)
 	    }
 	    
     }
+    
    cout<<"can't reach the destination";
 
 }
@@ -312,7 +314,7 @@ int main()
 	cout<<"Ncol: " <<COL<<"\n";
 	start.Nrow=0;
 	start.Ncol=3;
-	//startTime=omp_get_wtime();
+        startTime=omp_get_wtime();
 	printmatrix2();
 	
 	if(isValid(start.Nrow,start.Ncol)==false)
@@ -328,10 +330,7 @@ int main()
 	dest.Nrow=destR; 
 	dest.Ncol=destC;
 
-	Node dest;
 	
-	dest.Nrow=100; 
-	dest.Ncol=195;
 
 	cout<< "\nscelta: " << matrix[dest.Nrow*ROW+dest.Ncol]; 
 	if(isValid(dest.Nrow,dest.Ncol)==false)

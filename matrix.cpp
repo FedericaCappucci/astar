@@ -1,13 +1,12 @@
 #include <iostream>
 using namespace std;
 
-const int ROW=301;
-const int COL=301;
+const int ROW=400;
+const int COL=400;
 int destR;
 int destC;
 
-const int ROW=200;
-const int COL=200;
+
 
 //1 not obstacle 0 is obstacle
 //int matrix[ROW][COL];
