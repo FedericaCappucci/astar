@@ -76,18 +76,18 @@ int Search(Node& toSearch, list<Node> l)
 	
 		for(it=l.begin();it!=l.end();++it)
 		{	
-			#pragma omp task
-			{
+			//#pragma omp task
+			
 				Node c = *it;	
 				if((c.Ncol==toSearch.Ncol)&&(c.Nrow==toSearch.Nrow))
 				{
-					find=i;
+					return i;
 				}
 				i++;
-			}
+			
 		}
 	
-	return find;
+	return -1;
 }
 
 // A Utility Function to check whether given cell (row, col)
