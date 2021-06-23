@@ -73,8 +73,7 @@ int Search(Node& toSearch, list<Node> l)
 	int i=0;
 	int find=-1;
 	//task
-	#pragma omp parallel
-	{
+	
 		for(it=l.begin();it!=l.end();++it)
 		{	
 			#pragma omp task
@@ -87,7 +86,7 @@ int Search(Node& toSearch, list<Node> l)
 				i++;
 			}
 		}
-	}
+	
 	return find;
 }
 
