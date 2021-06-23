@@ -200,7 +200,7 @@ int a_star(Node *start, Node *destination)
         
         cout<<"nodo corrente"<<current.Ncol<<" " <<current.Nrow<<"\n";
         //static threads
-        omp_set_num_threads(8);
+        omp_set_num_threads(16);
         #pragma omp parallel for schedule(static) shared(openList,closedList)
         for(int pind = 0; pind<8; pind++) //4 position possible 
 	{
