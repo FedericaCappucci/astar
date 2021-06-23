@@ -44,24 +44,24 @@ int Search(Node& toSearch, set<Node> l)
 	
 	int i=0;
 	int find=-1;
-	//#pragma omp parallel
-	//{
-		cout<<"Thread: " << omp_get_thread_num(); ;
-		cout<<"\n";
+	#pragma omp parallel
+	{
+		/*cout<<"Thread: " << omp_get_thread_num(); ;
+		cout<<"\n";*/
 			
 		for(it=l.begin();it!=l.end();++it)
 		{	
-			//#pragma omp task
-			//{
+			#pragma omp task
+			{
 				Node c = *it;	
 				if((c.Ncol==toSearch.Ncol)&&(c.Nrow==toSearch.Nrow))
 				{
 					find=i;
 				}
 				i++;
-			//}
+			}
 		}
-	//}
+	}
 	//double end=omp_get_wtime();
 	//cout<<"ricerca: " << end-startTime <<"\n";
 	return find;
@@ -72,14 +72,20 @@ int Search(Node& toSearch, list<Node> l)
 	
 	int i=0;
 	//task
-	for(it=l.begin();it!=l.end();++it)
-	{	
-		Node c = *it;	
-		if((c.Ncol==toSearch.Ncol)&&(c.Nrow==toSearch.Nrow))
-		{
-			return i;
+	#pragma omp parallel
+	{
+		for(it=l.begin();it!=l.end();++it)
+		{	
+			#pragma omp task
+			{
+				Node c = *it;	
+				if((c.Ncol==toSearch.Ncol)&&(c.Nrow==toSearch.Nrow))
+				{
+					return i;
+				}
+				i++;
+			}
 		}
-		i++;
 	}
 	return -1;
 }
@@ -195,7 +201,7 @@ int a_star(Node *start, Node *destination)
         cout<<"nodo corrente"<<current.Ncol<<" " <<current.Nrow<<"\n";
         //static threads
         omp_set_num_threads(8);
-        #pragma omp parallel for schedule(dynamic) shared(openList,closedList)
+        #pragma omp parallel for schedule(static) shared(openList,closedList)
         for(int pind = 0; pind<8; pind++) //4 position possible 
 	{
 		    cout<<"\n Thread astar_main: " << omp_get_thread_num(); ;
@@ -244,7 +250,7 @@ int a_star(Node *start, Node *destination)
 		            	Node app= *it;	 
 		            	if((app.g+app.h)>(successor.g+successor.h))
 		            	{
-		            		#pragma omp critical
+		           		#pragma omp critical
 	            			{
 				    		openList.erase(it); // debugger
 				    		
@@ -261,6 +267,7 @@ int a_star(Node *start, Node *destination)
 		            	
 		            	cout <<"trovato in closed list\n";
 		            	list<Node>::iterator it=closedList.begin(); 
+		            	
 		            	advance(it,disp);
 		            	Node app= *it;	 
 		            	if((app.g+app.h)>(successor.g+successor.h))
