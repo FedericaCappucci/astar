@@ -71,6 +71,7 @@ int Search(Node& toSearch, list<Node> l)
 	list<Node>::iterator it;
 	
 	int i=0;
+	int find=-1;
 	//task
 	#pragma omp parallel
 	{
@@ -81,13 +82,13 @@ int Search(Node& toSearch, list<Node> l)
 				Node c = *it;	
 				if((c.Ncol==toSearch.Ncol)&&(c.Nrow==toSearch.Nrow))
 				{
-					return i;
+					find=i;
 				}
 				i++;
 			}
 		}
 	}
-	return -1;
+	return find;
 }
 
 // A Utility Function to check whether given cell (row, col)
