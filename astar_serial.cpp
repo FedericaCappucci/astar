@@ -183,8 +183,9 @@ int a_star(Node *start, Node *destination)
     
     int dy[8] = {0, 1, 0, -1,1,-1,-1,1}; //row
     int dx[8] = {-1, 0, 1, 0,1,-1,1,-1}; //col
+    bool esci=false;	
 
-    while(!openList.empty()) //per parallelizzazione meglio for
+    while((!openList.empty())||(esci!=true)) //per parallelizzazione meglio for
     {
     	
     	
@@ -220,7 +221,8 @@ int a_star(Node *start, Node *destination)
 	            	closedList.push_back(successor);
 	            	openList.erase(openList.begin(),openList.end());
 	            	printPath(closedList,*start);
-	            	return 0;
+	            	//return 0;
+			    esci=true;
 				}
 				else
 				{
@@ -281,7 +283,10 @@ int a_star(Node *start, Node *destination)
 	    }
 	    
     }
-    
+    if(esci==true)
+    {
+	   return 0;
+    }
    cout<<"can't reach the destination";
 
 }
