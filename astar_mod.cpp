@@ -13,6 +13,7 @@ using namespace std;
 
 double startTime;
 double endTime;
+int *matrix= (int*) calloc(ROW*COL,sizeof(int));
 
 struct Node
 {
@@ -201,7 +202,7 @@ void printPath(list<Node> closedList,Node start)
 	//cout<<"stampa: " << end-startTime <<"\n";
 	
 //	endTime=omp_get_wtime();
-        cout<< "\n\n time: " << endTime-startTime<<"\n";
+        //cout<< "\n\n time: " << endTime-startTime<<"\n";
 }
 
 int a_star(Node *start, Node *destination)
@@ -243,7 +244,7 @@ int a_star(Node *start, Node *destination)
     		while(!openList.empty()) //per parallelizzazione meglio for
     		{
     	
-    			if(found) break;
+    			if(found) return 0;
     	
 				Node current = *openList.begin();
 				openList.erase(openList.begin());
@@ -382,7 +383,8 @@ void readPath(string nomeFile)
 			i++;
 			j=0;
 		}
-		cout<<num;
+		
+		
 	}
 	fin.close();
 	
@@ -390,18 +392,18 @@ void readPath(string nomeFile)
 
 int main()
 {
-	generateMATRIX();
+	//generateMATRIX();
 //	printmatrix();
-//	generateMATRIX();
+	//generatematrix();
 	readPath("Matrix.txt");
 
 	Node start;
 	Node dest;
 	cout<<"Ncol: " <<COL<<"\n";
 	start.Nrow=0;
-	start.Ncol=3;
+	start.Ncol=4;
  //       startTime=omp_get_wtime();
-//	printmatrix2();
+	printmatrix2();
 	
 	if(isValid(start.Nrow,start.Ncol)==false)
 	{
@@ -412,9 +414,11 @@ int main()
 	
 
 	//Node dest;
-	generateDest();
+	/*generateDest();
 	dest.Nrow=destR; 
-	dest.Ncol=destC;
+	dest.Ncol=destC;*/
+	dest.Nrow=9;
+	dest.Ncol=7;
 
 	
 
@@ -424,7 +428,7 @@ int main()
 		cout <<"Invalid destination";
 		return 0;
 	}
-	//a_star(&start,&dest);
+	a_star(&start,&dest);
 //	cout<<"stampa: " << endTime-startTime <<"\n";
 	return 0;
 	
