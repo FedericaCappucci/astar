@@ -1,8 +1,13 @@
 #include <iostream>
+#include <math.h>
+#include <time.h>
+#include<cstdlib>
+
+#include<fstream>
 using namespace std;
 
-const int ROW=400;
-const int COL=400;
+const int ROW=10;
+const int COL=10;
 int destR;
 int destC;
 
@@ -11,21 +16,19 @@ int destC;
 //1 not obstacle 0 is obstacle
 //int matrix[ROW][COL];
 int *matrix= (int*) calloc(ROW*COL,sizeof(int));
+
 bool exi(int i,int c)
 {
-	if((i>0)&(c>0))
+	if(i!=0)
 	{
-
-		if((matrix[(i-1)*ROW+c]==0)||(matrix[i*ROW+(c-1)]==0)||(matrix[(i+1)*ROW+(c-1)]==0)||(matrix[(i-1)*ROW+(c-1)]==0))
-
 		if((matrix[(i-1)*ROW+c]==0)&&(matrix[i*ROW+(c-1)]==0)&&(matrix[(i+1)*ROW+(c-1)]==0)&&(matrix[(i-1)*ROW+(c-1)]==0))
-
+			//if((matrix[(i-1)*ROW+c]==0)||(matrix[i*ROW+(c-1)]==0)||(matrix[(i+1)*ROW+(c-1)]==0)||(matrix[(i-1)*ROW+(c-1)]==0))
 		{
-			
 			return false;
 		}
 	}
 	return true;
+	
 }
 int random_int(int min, int max)
 {
@@ -33,29 +36,42 @@ int random_int(int min, int max)
 }
 void generateMATRIX()
 {
-	for(int i=0;i<ROW;i++)
-	{
-	       for(int c=0;c<=COL;c++)
-	       {   		
-	       		bool esci=true;
-	       		do{
-		       		int v2 = rand() % 100 + 1;
-		       		if((v2>=0)&(v2<50))
-		       		{
-		       			//then not obstacle
-		       			matrix[i*ROW+c]=1;
-		       			
-		       		}
-		       		else
-		       		{
-		       			//obstacle
-		       			matrix[i*ROW+c]=0;
-		       		}
-		       		exi(i,c);
-		       	}
-		       	while(esci==false);
-	       }
+	srand(time(NULL));
+	fstream my_file;
+    my_file.open("my_file.txt", ios::out);
+	if (!my_file)
+  	{
+		for(int i=0;i<ROW;i++)
+		{
+		       for(int c=0;c<=COL;c++)
+		       {   		
+		       		bool esci=true;
+		       		do{
+			       		int v2 = rand() % 100 + 1;
+			       		bool valid = exi(i,c);
+			       		if((v2>=0)&&(v2<70))
+			       		{
+			       			//then not obstacle
+			       			if(valid==true)
+			       				my_file <<"1";
+			       				//matrix[i*ROW+c]=1;
+			       		}
+			       		else
+			       		{
+			       			//obstacle
+			       			if(valid==true)
+			       				//matrix[i*ROW+c]=0;
+			       				my_file <<"0";
+			       		}
+			       		//exi(i,c);
+			       	}
+			       	while(esci==false);
+		       }
+		       my_file <<"\n";
+		}
+	
 	}
+	my_file.close();
 }
 
 void printmatrix()
@@ -80,6 +96,7 @@ bool valida(int riga, int colonna)
 }
 void generateDest()
 {
+	srand(time(NULL));
 	int riga;
 	int colon;
 	do{
@@ -91,6 +108,7 @@ void generateDest()
 	destR=riga; 
 	destC=colon;
 }
+
 
 
 
