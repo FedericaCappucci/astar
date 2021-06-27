@@ -15,13 +15,13 @@ int destC;
 
 //1 not obstacle 0 is obstacle
 //int matrix[ROW][COL];
-int *matrix= (int*) calloc(ROW*COL,sizeof(int));
+int *Matrix= (int*) calloc(ROW*COL,sizeof(int));
 
 bool exi(int i,int c)
 {
 	if(i!=0)
 	{
-		if((matrix[(i-1)*ROW+c]==0)&&(matrix[i*ROW+(c-1)]==0)&&(matrix[(i+1)*ROW+(c-1)]==0)&&(matrix[(i-1)*ROW+(c-1)]==0))
+		if((Matrix[(i-1)*ROW+c]==0)&&(Matrix[i*ROW+(c-1)]==0)&&(Matrix[(i+1)*ROW+(c-1)]==0)&&(Matrix[(i-1)*ROW+(c-1)]==0))
 			//if((matrix[(i-1)*ROW+c]==0)||(matrix[i*ROW+(c-1)]==0)||(matrix[(i+1)*ROW+(c-1)]==0)||(matrix[(i-1)*ROW+(c-1)]==0))
 		{
 			return false;
@@ -37,13 +37,9 @@ int random_int(int min, int max)
 void generateMatrix()
 {
 	srand(time(NULL));
-	ofstream my_file("Matrix.txt");
-    	
-	if (my_file.is_open())
-  	{
 		for(int i=0;i<ROW;i++)
 		{
-		       for(int c=0;c<=COL;c++)
+		       for(int c=0;c<COL;c++)
 		       {   		
 		       		bool esci=true;
 		       		do{
@@ -53,28 +49,51 @@ void generateMatrix()
 			       		{
 			       			//then not obstacle
 			       			if(valid==true)
-			       				my_file << "1" ;
-			       				//matrix[i*ROW+c]=1;
+			       				//my_file << "1" ;
+			       				Matrix[i*ROW+c]=1;
 			       		}
 			       		else
 			       		{
 			       			//obstacle
 			       			if(valid==true)
-			       				//matrix[i*ROW+c]=0;
-			       				my_file << "0";
+			       				Matrix[i*ROW+c]=0;
+			       				//my_file << "0";
 			       		}
 			       		//exi(i,c);
 			       	}
 			       	while(esci==false);
 		       }
-		       my_file <<"\n" <<endl;
+		       //my_file << endl;
 		}
-		my_file.close();
+		//my_file.close();
+	
+}
+void writeFile()
+{
+	ofstream my_file("Matrix.txt",std::ofstream::out);
+	//exception handling
+  try {
+		if (my_file.is_open())
+	  	{
+	  		for(int i=0;i<ROW;i++)
+			{
+				for(int c=0;c<COL;c++)
+			    {
+			    	my_file << Matrix[i*ROW+c];
+			    }
+			    my_file <<endl;
+			}
+			my_file.close();
+	  	}
+	  	else
+	  	{
+	  		cout<<"cant open the file";	
+		}
 	}
-	else
-	{
-		cout<<"cant open the file";	
-	}
+	catch (const char* msg) {
+    cerr << msg << endl;
+  }
+	
 }
 
 void printmatrix()
@@ -83,15 +102,15 @@ void printmatrix()
 	{
 	       for(int c=0;c<COL;c++)
 	       {
-	       		cout <<" "<<matrix[i*ROW+c];
+	       		cout <<" "<<Matrix[i*ROW+c];
 	       	
 	       }
-	     
+	    cout<<"\n";
 	}
 }
 bool valida(int riga, int colonna)
 {
-	if(matrix[riga*ROW+colonna]==1)
+	if(Matrix[riga*ROW+colonna]==1)
 	{	
 		return true;
 	}
@@ -111,10 +130,11 @@ void generateDest()
 	destR=riga; 
 	destC=colon;
 }
-int main()
+/*int main()
 {
 	generateMatrix();
+	writeFile();
 	return 0;
-}
+}*/
 
 
