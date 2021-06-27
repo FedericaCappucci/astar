@@ -2,9 +2,9 @@
 #include <math.h>
 #include <time.h>
 #include<cstdlib>
-
 #include<fstream>
 using namespace std;
+using std::endl;
 
 const int ROW=10;
 const int COL=10;
@@ -34,12 +34,12 @@ int random_int(int min, int max)
 {
    return min + rand() % (max+1 - min);
 }
-void generateMATRIX()
+void generateMatrix()
 {
 	srand(time(NULL));
-	fstream my_file;
-    my_file.open("my_file.txt", ios::out);
-	if (!my_file)
+	ofstream my_file("Matrix.txt");
+    	
+	if (my_file.is_open())
   	{
 		for(int i=0;i<ROW;i++)
 		{
@@ -53,7 +53,7 @@ void generateMATRIX()
 			       		{
 			       			//then not obstacle
 			       			if(valid==true)
-			       				my_file <<"1";
+			       				my_file << "1" ;
 			       				//matrix[i*ROW+c]=1;
 			       		}
 			       		else
@@ -61,17 +61,20 @@ void generateMATRIX()
 			       			//obstacle
 			       			if(valid==true)
 			       				//matrix[i*ROW+c]=0;
-			       				my_file <<"0";
+			       				my_file << "0";
 			       		}
 			       		//exi(i,c);
 			       	}
 			       	while(esci==false);
 		       }
-		       my_file <<"\n";
+		       my_file <<"\n" <<endl;
 		}
-	
+		my_file.close();
 	}
-	my_file.close();
+	else
+	{
+		cout<<"cant open the file";	
+	}
 }
 
 void printmatrix()
@@ -108,7 +111,10 @@ void generateDest()
 	destR=riga; 
 	destC=colon;
 }
-
-
+int main()
+{
+	generateMatrix();
+	return 0;
+}
 
 
