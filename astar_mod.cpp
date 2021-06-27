@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <set>
+#include<fstream>
 #include <math.h>
 #include "matrix.cpp"
 #include <omp.h>
@@ -340,6 +341,7 @@ int a_star(Node *start, Node *destination)
   
     
    cout<<"can't reach the destination";
+   return 0;
 
 }
 void printmatrix2()
@@ -359,12 +361,39 @@ void printmatrix2()
 	//endTime=omp_get_wtime();
 	
 }
+void readPath(string nomeFile)
+{
+	char c;
+	int num;
+	int i=0;
+	int j=0;
+	ifstream fin(nomeFile);
+	
+	while(fin.get(c))
+	{
+		if(c != '\n')
+		{
+			num= (int) c-48;
+			matrix[i*ROW + j] = num;
+			j++;
+		}
+		else
+		{
+			i++;
+			j=0;
+		}
+		cout<<num;
+	}
+	fin.close();
+	
+}
 
 int main()
 {
-//	generateMATRIX();
-//	printmatrix();
 	generateMATRIX();
+//	printmatrix();
+//	generateMATRIX();
+	readPath("Matrix.txt");
 
 	Node start;
 	Node dest;
@@ -372,7 +401,7 @@ int main()
 	start.Nrow=0;
 	start.Ncol=3;
  //       startTime=omp_get_wtime();
-	printmatrix2();
+//	printmatrix2();
 	
 	if(isValid(start.Nrow,start.Ncol)==false)
 	{
@@ -395,7 +424,7 @@ int main()
 		cout <<"Invalid destination";
 		return 0;
 	}
-	a_star(&start,&dest);
+	//a_star(&start,&dest);
 //	cout<<"stampa: " << endTime-startTime <<"\n";
 	return 0;
 	
