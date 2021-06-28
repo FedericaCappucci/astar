@@ -227,19 +227,21 @@ int a_star(Node *start, Node *destination)
     
   // cout <<"dest" <<destination->Ncol;
     
-		    	
-		int nThread = omp_get_thread_num();
-		cout <<"\n thread: " << nThread;
-		set<Node> openList;
-		list<Node> closedList;
-		bool found = false;
-		beg=omp_get_wtime();
-		openList.insert(*start);
-		//closedList.push_back(*start);
-		list<Node>::iterator it=closedList.begin();
-		//Node c =*it;
-	//to create successors
-	int vc, vr;
+	
+		    			int nThread = omp_get_thread_num();
+		    			cout <<"\n thread: " << nThread;
+						set<Node> openList;
+				    	list<Node> closedList;
+				    	bool found = false;
+				    	beg=omp_get_wtime();
+						openList.insert(*start);
+						//closedList.push_back(*start);
+						list<Node>::iterator it=closedList.begin();
+						//Node c =*it;
+					
+					
+			    		//to create successors
+						int vc, vr;
 			    
 			    		int dy[8] = {0, 1, 0, -1,1,-1,-1,1}; //row
 			    		int dx[8] = {-1, 0, 1, 0,1,-1,1,-1}; //col
@@ -334,18 +336,17 @@ int a_star(Node *start, Node *destination)
 									}
 								}
 							}
+						
 				    		/*else
 				    		{
 				    			cout<<"non valido";
 							}*/
 					    }
-					    if(found==false)
-					    {
-					    	cout<<"\ncan't reach the destination";
-					    	//nd = omp_get_wtime();
+					   if(found!=true)
+						{
+								cout<<"can't reach the destination";
 						}
 
-   
    return 0;
 
 }
@@ -405,7 +406,7 @@ int main()
 	Node dest;
 	cout<<"Ncol: " <<COL<<"\n";
 	start.Nrow=0;
-	start.Ncol=5;
+	start.Ncol=0;
  //       startTime=omp_get_wtime();
 	//printmatrix2();
 	
@@ -421,8 +422,8 @@ int main()
 	/*generateDest();
 	dest.Nrow=destR; 
 	dest.Ncol=destC;*/
-	dest.Nrow=199;
-	dest.Ncol=199;
+	dest.Nrow=449;
+	dest.Ncol=448;
 
 	
 
