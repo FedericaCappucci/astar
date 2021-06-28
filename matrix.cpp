@@ -6,8 +6,8 @@
 using namespace std;
 using std::endl;
 
-const int ROW=450;
-const int COL=450;
+const int ROW=500;
+const int COL=500;
 int destR;
 int destC;
 
@@ -130,11 +130,11 @@ void generateDest()
 	destR=riga; 
 	destC=colon;
 }
-/*int main()
+int main()
 {
 	generateMatrix();
 	writeFile();
 	return 0;
-}*/
+}
 
 
