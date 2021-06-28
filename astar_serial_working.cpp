@@ -406,7 +406,7 @@ int main()
 	Node dest;
 	cout<<"Ncol: " <<COL<<"\n";
 	start.Nrow=0;
-	start.Ncol=0;
+	start.Ncol=1;
  //       startTime=omp_get_wtime();
 	//printmatrix2();
 	
@@ -422,8 +422,8 @@ int main()
 	/*generateDest();
 	dest.Nrow=destR; 
 	dest.Ncol=destC;*/
-	dest.Nrow=449;
-	dest.Ncol=448;
+	dest.Nrow=499;
+	dest.Ncol=499;
 
 	
 
