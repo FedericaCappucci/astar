@@ -301,8 +301,8 @@ int a_star(Node *start, Node *destination)
 									int nThread = omp_get_thread_num();
 									double cost=neighbours1[pind].h+neighbours1[pind].g;
 									printPath(*closedList,*start);
-									//path_array[neg].cost=cost;
-									//path_array[neg].numThread=nThread;
+									path_array[neg].cost=cost;
+									path_array[neg].numThread=nThread;
 									found=true;
 									
 								}
@@ -395,6 +395,10 @@ int a_star(Node *start, Node *destination)
 				}//for 
 			} //end of single thread
 		}//end of parallel implicit barrier
+		for (int g=0; g<counterNeg;g++)
+		{
+			cout <<"\n costi: "<< path_array[g].cost<<"\n";
+		}
 	} //if
 
    return 0;
