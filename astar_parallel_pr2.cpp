@@ -314,6 +314,10 @@ void a_star(Node *start, Node *destination)
 									printPath(*closedList,*start);
 									path_array[neg].cost=cost;
 									path_array[neg].numThread=nThread;
+									
+									//FREE memory 
+									delete closedList;
+									delete neighbours1;
 									found=true;
 									
 								}
