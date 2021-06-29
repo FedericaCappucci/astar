@@ -18,9 +18,9 @@ int *matrix= (int*) calloc(ROW*COL,sizeof(int));
 
 struct Node
 {
-    int Nrow,Ncol;
-    double g,h;
-    int Prow,Pcol;
+    int Nrow,Ncol=0;
+    double g,h=0;
+    int Prow,Pcol=0;
     bool isObstacle = false;
     public:
 	    bool operator<(const Node& other )const
@@ -45,8 +45,8 @@ struct Node
 };
 typedef struct path
 {
-	double cost;
-	int numThread;
+	double cost=0;
+	int numThread=-1;
 	
 } Path;
 
@@ -231,22 +231,8 @@ int a_star(Node *start, Node *destination)
     start->h=heuristic(start,destination);
     
   // cout <<"dest" <<destination->Ncol;
-    if(counterNeg!=0)
-    { 	
-    	cout<<"Start\n";
-    	cout<<"vicini: " <<counterNeg <<"\n";
-		Path path_array[counterNeg];
-    	double beg = omp_get_wtime();
-		#pragma omp parallel
-		{ 
-    		
-    		#pragma omp single nowait
-    		{
-    			for(int neg=0;neg<counterNeg;neg++)
-    			{  
-    				#pragma omp task
-    				{
-    					cout<<"\n Numero thread: "<<omp_get_thread_num();
+    
+	
 		    			int nThread = omp_get_thread_num();
 		    			cout <<"\n thread: " << nThread;
 						set<Node> openList;
@@ -281,7 +267,8 @@ int a_star(Node *start, Node *destination)
 			        		neighbours1= setNeighbours(current,&counterNeg);
 							for(int pind = 0; pind<counterNeg; pind++) //8 position possible 
 							{
-								
+								if ((current.Ncol==225)&&(current.Nrow==245))
+									cout<<"sad";
 						    	//vr = current.Nrow + dy[pind]; //row
 								//vc = current.Ncol + dx[pind]; //col
 							    
@@ -301,8 +288,8 @@ int a_star(Node *start, Node *destination)
 									int nThread = omp_get_thread_num();
 									double cost=neighbours1[pind].h+neighbours1[pind].g;
 									printPath(*closedList,*start);
-									path_array[neg].cost=cost;
-									path_array[neg].numThread=nThread;
+									//path_array[k].cost=cost;
+									//path_array[k].numThread=nThread;
 									found=true;
 									
 								}
@@ -371,12 +358,6 @@ int a_star(Node *start, Node *destination)
 						{
 								cout<<"can't reach the destination";
 						}
-						else
-						{
-							cout<<"Trovato!\n";
-							cout<<"il nodo ";
-							
-						}
 						cout<<"\n closedList: \n";
 					//stampa closedList
 					list<Node>::iterator i;
@@ -390,16 +371,9 @@ int a_star(Node *start, Node *destination)
 						pino=*it;
 						cout << "(" << pino.Nrow << "," << pino.Ncol <<") ->parente" << pino.Prow <<", "<<pino.Pcol <<") costo " << pino.g+pino.h <<"\n";
         				//std::cout << *it << std::endl;
-        								}*/	
-        			} //end task
-				}//for 
-			} //end of single thread
-		}//end of parallel implicit barrier
-		for (int g=0; g<counterNeg;g++)
-		{
-			cout <<"\n costi: "<< path_array[g].cost<<"\n";
-		}
-	} //if
+        				
+    				}*/		
+					
 
    return 0;
 
@@ -476,8 +450,8 @@ int main()
 	/*generateDest();
 	dest.Nrow=destR; 
 	dest.Ncol=destC;*/
-	dest.Nrow=4999;
-	dest.Ncol=4998;
+	dest.Nrow=499;
+	dest.Ncol=499;
 
 	
 
