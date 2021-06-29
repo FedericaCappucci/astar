@@ -18,9 +18,9 @@ int *matrix= (int*) calloc(ROW*COL,sizeof(int));
 
 struct Node
 {
-    int Nrow,Ncol=0;
-    double g,h=0;
-    int Prow,Pcol=0;
+    int Nrow,Ncol;
+    double g,h;
+    int Prow,Pcol;
     bool isObstacle = false;
     public:
 	    bool operator<(const Node& other )const
@@ -214,7 +214,7 @@ void printPath(list<Node> closedList,Node start)
         //cout<< "\n\n time: " << endTime-startTime<<"\n";
 }
 
-void a_star(Node *start, Node *destination)
+int a_star(Node *start, Node *destination)
 {
     Node * neighbours1= new Node[8];
     double beg=0;
@@ -223,6 +223,10 @@ void a_star(Node *start, Node *destination)
     
     
     neighbours1 = setNeighbours((Node)(*start), &counterNeg);
+    
+    
+    //destroying neg1
+    delete neighbours1;
     //int c= *(neighbours1+0)->Ncol; 
    
     
@@ -366,6 +370,9 @@ void a_star(Node *start, Node *destination)
 							}*/
 							//fflush(stdout);
 							
+							delete neighbours1;
+							neighbours1 = NULL;
+							
 					    }
 					   if(found!=true)
 						{
@@ -377,6 +384,8 @@ void a_star(Node *start, Node *destination)
 							cout<<"il nodo ";
 							
 						}
+						delete closedList;
+						delete neighbours1;
 						cout<<"\n closedList: \n";
 					//stampa closedList
 					list<Node>::iterator i;
@@ -392,6 +401,7 @@ void a_star(Node *start, Node *destination)
         				//std::cout << *it << std::endl;
         								}*/	
         			} //end task
+       				
 				}//for 
 			} //end of single thread
 		}//end of parallel implicit barrier
@@ -401,7 +411,7 @@ void a_star(Node *start, Node *destination)
 		}
 	} //if
 
-   
+   return 0;
 
 }
 void printmatrix2()
