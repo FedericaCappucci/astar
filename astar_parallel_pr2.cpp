@@ -18,9 +18,9 @@ int *matrix= (int*) calloc(ROW*COL,sizeof(int));
 
 struct Node
 {
-    int Nrow,Ncol;
-    double g,h;
-    int Prow,Pcol;
+    int Nrow,Ncol=0;
+    double g,h=0;
+    int Prow,Pcol=0;
     bool isObstacle = false;
     public:
 	    bool operator<(const Node& other )const
