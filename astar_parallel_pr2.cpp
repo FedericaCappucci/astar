@@ -22,6 +22,7 @@ struct Node
     double g,h;
     int Prow,Pcol;
     bool isObstacle = false;
+
     public:
 	    bool operator<(const Node& other )const
 	    {
@@ -41,6 +42,12 @@ struct Node
 				}
 			}
 	    }
+	    static void operator delete(void* ptr, std::size_t sz)
+    	    {
+        		cout << "custom delete for size " << sz <<endl;
+        		delete (ptr); // ::operator delete(ptr) can also be used
+    	    }
+	
 	   
 };
 typedef struct path
@@ -214,7 +221,7 @@ void printPath(list<Node> closedList,Node start)
         //cout<< "\n\n time: " << endTime-startTime<<"\n";
 }
 
-int a_star(Node *start, Node *destination)
+void a_star(Node *start, Node *destination)
 {
     Node * neighbours1= new Node[8];
     double beg=0;
@@ -254,7 +261,7 @@ int a_star(Node *start, Node *destination)
 		    			int nThread = omp_get_thread_num();
 		    			cout <<"\n thread: " << nThread;
 						set<Node> openList;
-				    	list<Node> *closedList=new list<Node>[ROW*COL];
+				    	list<Node> *closedList=new list<Node>;
 				    	bool found = false;
 				    	beg=omp_get_wtime();
 						openList.insert(*start);
@@ -370,10 +377,10 @@ int a_star(Node *start, Node *destination)
 							}*/
 							//fflush(stdout);
 							
-							delete neighbours1;
-							neighbours1 = NULL;
+							
 							
 					    }
+					    //delete closedList;
 					   if(found!=true)
 						{
 								cout<<"can't reach the destination";
@@ -383,9 +390,11 @@ int a_star(Node *start, Node *destination)
 							cout<<"Trovato!\n";
 							cout<<"il nodo ";
 							
+							
 						}
 						delete closedList;
 						delete neighbours1;
+						
 						cout<<"\n closedList: \n";
 					//stampa closedList
 					list<Node>::iterator i;
@@ -411,7 +420,7 @@ int a_star(Node *start, Node *destination)
 		}
 	} //if
 
-   return 0;
+  
 
 }
 void printmatrix2()
@@ -486,8 +495,8 @@ int main()
 	/*generateDest();
 	dest.Nrow=destR; 
 	dest.Ncol=destC;*/
-	dest.Nrow=4999;
-	dest.Ncol=4998;
+	dest.Nrow=499;
+	dest.Ncol=499;
 
 	
 
@@ -498,6 +507,7 @@ int main()
 		return 0;
 	}
 	a_star(&start,&dest);
+	free(matrix);
 //	cout<<"stampa: " << endTime-startTime <<"\n";
 	return 0;
 	
