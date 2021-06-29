@@ -214,7 +214,7 @@ void printPath(list<Node> closedList,Node start)
         //cout<< "\n\n time: " << endTime-startTime<<"\n";
 }
 
-int a_star(Node *start, Node *destination)
+void a_star(Node *start, Node *destination)
 {
     Node * neighbours1= new Node[8];
     double beg=0;
@@ -401,7 +401,7 @@ int a_star(Node *start, Node *destination)
 		}
 	} //if
 
-   return 0;
+   
 
 }
 void printmatrix2()
