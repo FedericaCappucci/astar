@@ -476,8 +476,8 @@ int main()
 	/*generateDest();
 	dest.Nrow=destR; 
 	dest.Ncol=destC;*/
-	dest.Nrow=499;
-	dest.Ncol=499;
+	dest.Nrow=4999;
+	dest.Ncol=4998;
 
 	
 
