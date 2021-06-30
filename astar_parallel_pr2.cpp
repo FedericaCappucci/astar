@@ -249,14 +249,15 @@ void a_star(Node *start, Node *destination)
     	cout<<"Start\n";
     	cout<<"vicini: " <<counterNeg <<"\n";
 		Path path_array[counterNeg];
-    	double beg = omp_get_wtime();
+    		double beg = omp_get_wtime();
 		#pragma omp parallel
 		{ 
     		
     		#pragma omp single nowait
     		{
+			Node starts_new[counterNeg]=neighbours1;
     			for(int neg=0;neg<counterNeg;neg++)
-    			{  
+    			{  	
     				#pragma omp task private(neighbours1,counterNeg)
     				{
     					cout<<"\n Numero thread: "<<omp_get_thread_num();
@@ -268,7 +269,7 @@ void a_star(Node *start, Node *destination)
 					//Node * neighbours1=new Node[8];
 					
 				    	//beg=omp_get_wtime();
-					openList.insert(neighbours1[neg]);
+					openList.insert(starts_new[counterNeg]);
 					//closedList.push_back(*start);
 					list<Node>::iterator it=closedList->begin();
 					//Node c =*it;
