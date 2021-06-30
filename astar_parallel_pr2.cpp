@@ -280,7 +280,7 @@ void a_star(Node *start, Node *destination)
 					
 				    	//beg=omp_get_wtime();
 					openList.insert(new_starts[counterNeg]);
-					closedList.push_back(*start);
+					closedList->push_back(*start);
 					list<Node>::iterator it=closedList->begin();
 					//Node c =*it;
 					
