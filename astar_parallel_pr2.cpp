@@ -507,7 +507,7 @@ int main()
 	Node dest;
 	//cout<<"Ncol: " <<COL<<"\n";
 	start.Nrow=0;
-	start.Ncol=0; //7 for 5000x5000 matrix 6 
+	start.Ncol=2; //7 for 5000x5000 matrix 6 
  //       startTime=omp_get_wtime();
 	//printmatrix2();
 	
@@ -523,8 +523,8 @@ int main()
 	/*generateDest();
 	dest.Nrow=destR; 
 	dest.Ncol=destC;*/
-	dest.Nrow=1999; //4999 for 5000x5000 matrix 2440
-	dest.Ncol=1999; //4998 for 5000x5000 matrix 2445
+	dest.Nrow=2999; //4999 for 5000x5000 matrix 2440
+	dest.Ncol=2999; //4998 for 5000x5000 matrix 2445
 
 	
 
