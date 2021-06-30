@@ -163,9 +163,9 @@ double heuristic(Node* current_cell,Node *goal)
 {
 
     
-	//double i=sqrt((goal->Nrow-current_cell->Nrow)*(goal->Nrow-current_cell->Nrow)+(goal->Ncol-current_cell->Ncol)*(goal->Ncol-current_cell->Ncol));
+	double i=sqrt((goal->Nrow-current_cell->Nrow)*(goal->Nrow-current_cell->Nrow)+(goal->Ncol-current_cell->Ncol)*(goal->Ncol-current_cell->Ncol));
 	//manhattan 
-	double i=abs(current_cell->Nrow-goal->Nrow)+abs(current_cell->Ncol-goal->Ncol);
+	//double i=abs(current_cell->Nrow-goal->Nrow)+abs(current_cell->Ncol-goal->Ncol);
 	return i;
 }
 void printPath(list<Node> closedList,Node start)
@@ -314,7 +314,7 @@ void a_star(Node *start, Node *destination)
 									closedList->push_back(neighbours1[pind]);
 									openList.erase(openList.begin(),openList.end());
 									int nThread = omp_get_thread_num();
-									double cost=neighbours1[pind].h+neighbours1[pind].g;
+									double cost=neighbours1[pind].g;
 									//printPath(*closedList,*start);
 									path_array[neg].cost=cost;
 									path_array[neg].numThread=nThread;
