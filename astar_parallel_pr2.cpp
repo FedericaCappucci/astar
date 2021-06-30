@@ -233,7 +233,7 @@ void a_star(Node *start, Node *destination)
     
     
     //destroying neg1
-    delete neighbours1;
+    //delete neighbours1;
     //int c= *(neighbours1+0)->Ncol; 
    
     
@@ -255,7 +255,7 @@ void a_star(Node *start, Node *destination)
     		{
     			for(int neg=0;neg<counterNeg;neg++)
     			{  
-    				#pragma omp task
+    				#pragma omp task private(neighbours1)
     				{
     					cout<<"\n Numero thread: "<<omp_get_thread_num();
 		    			int nThread = omp_get_thread_num();
@@ -263,7 +263,7 @@ void a_star(Node *start, Node *destination)
 					set<Node> openList;
 				    	list<Node> *closedList=new list<Node>;
 				    	bool found = false;
-					Node * neighbours1=new Node[8];
+					//Node * neighbours1=new Node[8];
 					
 				    	beg=omp_get_wtime();
 					openList.insert(*start);
