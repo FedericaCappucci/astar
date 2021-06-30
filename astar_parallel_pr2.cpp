@@ -233,6 +233,7 @@ void a_star(Node *start, Node *destination)
     
     
     neighbours1 = setNeighbours((Node)(*start), &counterNeg);
+	cout <<"vicini : " << counterNeg;
     for (int sub=0; sub<counterNeg; sub++)
     {
     	Node t;
@@ -487,7 +488,7 @@ void readPath(string nomeFile)
 			i++;
 			j=0;
 		}
-		cout<<"try\n";
+		
 		
 		
 	}
