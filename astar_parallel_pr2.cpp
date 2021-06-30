@@ -44,7 +44,7 @@ struct Node
 	    }
 	    static void operator delete(void* ptr, std::size_t sz)
     	    {
-        		cout << "custom delete for size " << sz <<endl;
+        		//cout << "custom delete for size " << sz <<endl;
         		delete (ptr); // ::operator delete(ptr) can also be used
     	    }
 	
@@ -229,7 +229,7 @@ void a_star(Node *start, Node *destination)
     double end=0;
     int counterNeg=0; //count the neighbours which are valid
     omp_set_dynamic(0); // Explicitly disable dynamic teams
-    omp_set_num_threads(1); // Use N threads for all parallel regions
+    omp_set_num_threads(2); // Use N threads for all parallel regions
     
     
     neighbours1 = setNeighbours((Node)(*start), &counterNeg);
@@ -273,9 +273,9 @@ void a_star(Node *start, Node *destination)
     			{  	
     				#pragma omp task private(neighbours1,counterNeg)
     				{
-    					cout<<"\n Numero thread: "<<omp_get_thread_num();
+    					//cout<<"\n Numero thread: "<<omp_get_thread_num();
 		    			int nThread = omp_get_thread_num();
-		    			cout <<"\n thread: " << nThread;
+		    			//cout <<"\n thread: " << nThread;
 						set<Node> openList;
 				    	list<Node> *closedList=new list<Node>;
 				    	bool found = false;
@@ -503,7 +503,7 @@ int main()
 	set_new_handler(no_memory);
 	Node start;
 	Node dest;
-	cout<<"Ncol: " <<COL<<"\n";
+	//cout<<"Ncol: " <<COL<<"\n";
 	start.Nrow=2;
 	start.Ncol=7;
  //       startTime=omp_get_wtime();
@@ -526,7 +526,7 @@ int main()
 
 	
 
-	cout<< "\ndestinazione : " << dest.Nrow <<" " <<dest.Ncol<<"\n"; 
+	//cout<< "\ndestinazione : " << dest.Nrow <<" " <<dest.Ncol<<"\n"; 
 	if(isValid(dest.Nrow,dest.Ncol)==false)
 	{
 		cout <<"Invalid destination";
