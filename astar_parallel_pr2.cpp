@@ -260,14 +260,16 @@ void a_star(Node *start, Node *destination)
     					cout<<"\n Numero thread: "<<omp_get_thread_num();
 		    			int nThread = omp_get_thread_num();
 		    			cout <<"\n thread: " << nThread;
-						set<Node> openList;
+					set<Node> openList;
 				    	list<Node> *closedList=new list<Node>;
 				    	bool found = false;
+					Node * neighbours1=new Node[8];
+					
 				    	beg=omp_get_wtime();
-						openList.insert(*start);
-						//closedList.push_back(*start);
-						list<Node>::iterator it=closedList->begin();
-						//Node c =*it;
+					openList.insert(*start);
+					//closedList.push_back(*start);
+					list<Node>::iterator it=closedList->begin();
+					//Node c =*it;
 					
 					
 			    		//to create successors
@@ -387,7 +389,9 @@ void a_star(Node *start, Node *destination)
 					    //delete closedList;
 					   if(found!=true)
 						{
-								cout<<"can't reach the destination";
+							cout<<"can't reach the destination";
+						  	delete closedList;
+							delete [] neighbours1;
 						}
 						else
 						{
@@ -396,10 +400,9 @@ void a_star(Node *start, Node *destination)
 							
 							
 						}
-						delete closedList;
-						delete neighbours1;
 						
-						cout<<"\n closedList: \n";
+						
+					cout<<"\n closedList: \n";
 					//stampa closedList
 					list<Node>::iterator i;
 					Node pino;
