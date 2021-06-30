@@ -236,9 +236,12 @@ void a_star(Node *start, Node *destination)
     for (int sub=0; sub<counterNeg; sub++)
     {
     	Node t;
-    	//Node t1;
     	t=neighbours1[sub];
-    	new_starts[sub] = neighbours1[sub]; 	
+    	t.g=1;
+    	t.h=heuristic(&neighbours1[sub],destination);
+    	//Node t1;
+    	
+    	new_starts[sub] = t; 	
 		//t1= new_starts[sub];
 	}
     
@@ -279,9 +282,11 @@ void a_star(Node *start, Node *destination)
 					//Node * neighbours1=new Node[8];
 					
 				    	//beg=omp_get_wtime();
-					openList.insert(new_starts[counterNeg]);
-					closedList->push_back(*start);
-					list<Node>::iterator it=closedList->begin();
+				    	//openList.insert(*start);
+						
+						openList.insert(new_starts[counterNeg]);
+						closedList->push_back(*start);
+						list<Node>::iterator it=closedList->begin();
 					//Node c =*it;
 					
 					
@@ -300,7 +305,7 @@ void a_star(Node *start, Node *destination)
 							openList.erase(openList.begin());
 							closedList->push_back(current);
 			        
-			        		//cout<<"nodo corrente"<<current.Ncol<<" " <<current.Nrow<<"\n";
+			        		cout<<"nodo corrente"<<current.Ncol<<" " <<current.Nrow<<"\n";
 			        		//static threads
 			        		//#pragma omp parallel for schedule(static)
 			        		//find near nodes of my current one 
