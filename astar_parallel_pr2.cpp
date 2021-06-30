@@ -229,7 +229,7 @@ void a_star(Node *start, Node *destination)
     double end=0;
     int counterNeg=0; //count the neighbours which are valid
     omp_set_dynamic(0); // Explicitly disable dynamic teams
-    omp_set_num_threads(2); // Use N threads for all parallel regions
+    omp_set_num_threads(4); // Use N threads for all parallel regions
     
     
     neighbours1 = setNeighbours((Node)(*start), &counterNeg);
@@ -260,7 +260,7 @@ void a_star(Node *start, Node *destination)
     if(counterNeg!=0)
     { 	
     	cout<<"Start\n";
-    	cout<<"vicini: " <<counterNeg <<"\n";
+    	//cout<<"vicini: " <<counterNeg <<"\n";
 		Path path_array[counterNeg];
     		double beg = omp_get_wtime();
 		#pragma omp parallel
@@ -416,13 +416,13 @@ void a_star(Node *start, Node *destination)
 						else
 						{
 							//cout<<"Trovato!\n" << "time " << end-beg;
-							cout<<"il nodo ";
+							//cout<<"il nodo ";
 							
 							
 						}
 						
 						
-					cout<<"\n closedList: \n";
+					//cout<<"\n closedList: \n";
 					//stampa closedList
 					
 					/*for(i=closedList->end();i!=closedList->begin();--i)
