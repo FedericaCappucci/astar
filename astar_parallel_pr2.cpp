@@ -265,7 +265,7 @@ void a_star(Node *start, Node *destination)
 				    	bool found = false;
 					//Node * neighbours1=new Node[8];
 					
-				    	beg=omp_get_wtime();
+				    	//beg=omp_get_wtime();
 					openList.insert(*start);
 					//closedList.push_back(*start);
 					list<Node>::iterator it=closedList->begin();
@@ -287,7 +287,7 @@ void a_star(Node *start, Node *destination)
 							openList.erase(openList.begin());
 							closedList->push_back(current);
 			        
-			        		cout<<"nodo corrente"<<current.Ncol<<" " <<current.Nrow<<"\n";
+			        		//cout<<"nodo corrente"<<current.Ncol<<" " <<current.Nrow<<"\n";
 			        		//static threads
 			        		//#pragma omp parallel for schedule(static)
 			        		//find near nodes of my current one 
@@ -301,9 +301,9 @@ void a_star(Node *start, Node *destination)
 							    neighbours1[pind].g=current.g+1;
 							    //not sure it will work
 							    neighbours1[pind].h=heuristic(&neighbours1[pind],destination);
-							    Node successor= neighbours1[pind];
+							//    Node successor= neighbours1[pind];
 			 
-				            	cout<<"nodo successor"<<neighbours1[pind].Ncol<<" " <<neighbours1[pind].Nrow<<"\n";
+			//	            	cout<<"nodo successor"<<neighbours1[pind].Ncol<<" " <<neighbours1[pind].Nrow<<"\n";
 								if(isDestination(neighbours1[pind],*destination))
 								{
 									cout<<"arrivo\n";
@@ -313,7 +313,7 @@ void a_star(Node *start, Node *destination)
 									openList.erase(openList.begin(),openList.end());
 									int nThread = omp_get_thread_num();
 									double cost=neighbours1[pind].h+neighbours1[pind].g;
-									printPath(*closedList,*start);
+									//printPath(*closedList,*start);
 									path_array[neg].cost=cost;
 									path_array[neg].numThread=nThread;
 									
@@ -404,8 +404,7 @@ void a_star(Node *start, Node *destination)
 						
 					cout<<"\n closedList: \n";
 					//stampa closedList
-					list<Node>::iterator i;
-					Node pino;
+					
 					/*for(i=closedList->end();i!=closedList->begin();--i)
 					{
 		
