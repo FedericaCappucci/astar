@@ -487,8 +487,8 @@ int main()
 	Node start;
 	Node dest;
 	cout<<"Ncol: " <<COL<<"\n";
-	start.Nrow=0;
-	start.Ncol=0;
+	start.Nrow=2;
+	start.Ncol=7;
  //       startTime=omp_get_wtime();
 	//printmatrix2();
 	
