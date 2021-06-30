@@ -224,6 +224,7 @@ void printPath(list<Node> closedList,Node start)
 void a_star(Node *start, Node *destination)
 {
     Node * neighbours1= new Node[8];
+    Node * new_starts = new Node[8];
     double beg=0;
     double end=0;
     int counterNeg=0; //count the neighbours which are valid
@@ -232,6 +233,11 @@ void a_star(Node *start, Node *destination)
     
     
     neighbours1 = setNeighbours((Node)(*start), &counterNeg);
+    for (int i=0; i<counterNeg; i++)
+    {
+    	new_starts[i] = neighbours1[i]; 	
+	}
+    
     
     
     //destroying neg1
@@ -255,8 +261,7 @@ void a_star(Node *start, Node *destination)
     		
     		#pragma omp single nowait
     		{
-			Node starts_new[counterNeg];
-			starts_new[counterNeg]=neighbours1[counterNeg];
+		
     			for(int neg=0;neg<counterNeg;neg++)
     			{  	
     				#pragma omp task private(neighbours1,counterNeg)
@@ -264,7 +269,7 @@ void a_star(Node *start, Node *destination)
     					cout<<"\n Numero thread: "<<omp_get_thread_num();
 		    			int nThread = omp_get_thread_num();
 		    			cout <<"\n thread: " << nThread;
-					set<Node> openList;
+						set<Node> openList;
 				    	list<Node> *closedList=new list<Node>;
 				    	bool found = false;
 					//Node * neighbours1=new Node[8];
