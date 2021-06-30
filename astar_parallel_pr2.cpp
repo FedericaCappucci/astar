@@ -233,9 +233,13 @@ void a_star(Node *start, Node *destination)
     
     
     neighbours1 = setNeighbours((Node)(*start), &counterNeg);
-    for (int i=0; i<counterNeg; i++)
+    for (int sub=0; sub<counterNeg; sub++)
     {
-    	new_starts[i] = neighbours1[i]; 	
+    	Node t;
+    	//Node t1;
+    	t=neighbours1[sub];
+    	new_starts[sub] = neighbours1[sub]; 	
+		//t1= new_starts[sub];
 	}
     
     
