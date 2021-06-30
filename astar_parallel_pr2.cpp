@@ -487,6 +487,7 @@ void readPath(string nomeFile)
 			i++;
 			j=0;
 		}
+		cout<<"try\n";
 		
 		
 	}
@@ -504,8 +505,8 @@ int main()
 	Node start;
 	Node dest;
 	//cout<<"Ncol: " <<COL<<"\n";
-	start.Nrow=2;
-	start.Ncol=7; //7 for 5000x5000 matrix 6 
+	start.Nrow=0;
+	start.Ncol=0; //7 for 5000x5000 matrix 6 
  //       startTime=omp_get_wtime();
 	//printmatrix2();
 	
@@ -521,8 +522,8 @@ int main()
 	/*generateDest();
 	dest.Nrow=destR; 
 	dest.Ncol=destC;*/
-	dest.Nrow=2440; //4999 for 5000x5000 matrix 2440
-	dest.Ncol=2445; //4998 for 5000x5000 matrix 2445
+	dest.Nrow=1999; //4999 for 5000x5000 matrix 2440
+	dest.Ncol=1999; //4998 for 5000x5000 matrix 2445
 
 	
 
