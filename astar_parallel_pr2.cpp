@@ -229,7 +229,7 @@ void a_star(Node *start, Node *destination)
     double end=0;
     int counterNeg=0; //count the neighbours which are valid
     omp_set_dynamic(0); // Explicitly disable dynamic teams
-    omp_set_num_threads(4); // Use N threads for all parallel regions
+    omp_set_num_threads(8); // Use N threads for all parallel regions
     
     
     neighbours1 = setNeighbours((Node)(*start), &counterNeg);
@@ -442,7 +442,7 @@ void a_star(Node *start, Node *destination)
 		}//end of parallel implicit barrier
 		for (int g=0; g<counterNeg;g++)
 		{
-			cout <<"\n costi: "<< path_array[g].cost<<"\n";
+			//cout <<"\n costi: "<< path_array[g].cost<<"\n";
 		}
 	} //if
 
@@ -505,7 +505,7 @@ int main()
 	Node dest;
 	//cout<<"Ncol: " <<COL<<"\n";
 	start.Nrow=2;
-	start.Ncol=7;
+	start.Ncol=6; //7 for 5000x5000 matrix
  //       startTime=omp_get_wtime();
 	//printmatrix2();
 	
@@ -521,8 +521,8 @@ int main()
 	/*generateDest();
 	dest.Nrow=destR; 
 	dest.Ncol=destC;*/
-	dest.Nrow=4999;
-	dest.Ncol=4998;
+	dest.Nrow=2440; //4999 for 5000x5000 matrix
+	dest.Ncol=2445; //4998 for 5000x5000 matrix
 
 	
 
