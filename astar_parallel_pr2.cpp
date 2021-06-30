@@ -347,12 +347,12 @@ void a_star(Node *start, Node *destination)
 										}
 									}	
 									if(Search(neighbours1[pind],*closedList)!=-1) //node is already in ClosedList. This function return the displacement for the iterator
-					            		{
-					            			int disp=0;
-					            			disp=Search(neighbours1[pind],*closedList);
+					            			{
+					            			/*int disp=0;
+					            			disp=Search(neighbours1[pind],*closedList);*/
 					            	
 											cout <<"trovato in closed list\n";
-											list<Node>::iterator it=closedList->begin(); 
+											/*list<Node>::iterator it=closedList->begin(); 
 											advance(it,disp);
 											Node app= *it;	 
 											//remove?
@@ -360,12 +360,12 @@ void a_star(Node *start, Node *destination)
 											{
 												closedList->erase(it); //debugger
 												/*neighbours1[pind].Prow=neighbours1[pind].Nrow-dy[pind];
-												neighbours1[pind].Pcol=neighbours1[pind].Ncol-dx[pind];*/
+												neighbours1[pind].Pcol=neighbours1[pind].Ncol-dx[pind];
 												neighbours1[pind].Prow=current.Nrow;
 												neighbours1[pind].Pcol=current.Ncol;
 												closedList->push_back(neighbours1[pind]);
-											}
-										}
+											}*/
+									}
 									else
 									{
 										neighbours1[pind].Prow=current.Nrow;
