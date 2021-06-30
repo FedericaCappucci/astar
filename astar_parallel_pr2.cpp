@@ -315,7 +315,7 @@ void a_star(Node *start, Node *destination)
 									openList.erase(openList.begin(),openList.end());
 									int nThread = omp_get_thread_num();
 									double cost=neighbours1[pind].g;
-									end=omp_get_wtime();
+									//end=omp_get_wtime();
 									//printPath(*closedList,*start);
 									path_array[neg].cost=cost;
 									path_array[neg].numThread=nThread;
@@ -399,7 +399,7 @@ void a_star(Node *start, Node *destination)
 						}
 						else
 						{
-							cout<<"Trovato!\n" << "time" << end-beg;
+							//cout<<"Trovato!\n" << "time " << end-beg;
 							cout<<"il nodo ";
 							
 							
