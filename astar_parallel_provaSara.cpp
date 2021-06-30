@@ -269,7 +269,7 @@ void a_star(Node *start, Node *destination)
     		
     		//#pragma omp single nowait
     		//{
-		#pragma omp for schedule(dynamic)
+		#pragma omp for
     			for(int neg=0;neg<counterNeg;neg++)
     			{  	
     				//#pragma omp task private(neighbours1,counterNeg)
