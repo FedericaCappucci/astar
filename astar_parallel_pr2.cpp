@@ -75,15 +75,15 @@ int Search(Node& toSearch, set<Node> l)
 			
 		for(it=l.begin();it!=l.end();++it)
 		{	
-			//#pragma omp task
-			//{
+			#pragma omp 
+			{
 				Node c = *it;	
 				if((c.Ncol==toSearch.Ncol)&&(c.Nrow==toSearch.Nrow))
 				{
 					find=i;
 				}
 				i++;
-			//}
+			}
 		}
 	//}
 	//double end=omp_get_wtime();
@@ -235,13 +235,12 @@ void a_star(Node *start, Node *destination)
     neighbours1 = setNeighbours((Node)(*start), &counterNeg);
     for (int sub=0; sub<counterNeg; sub++)
     {
-    	Node t;
-    	t=neighbours1[sub];
-    	t.g=1;
-    	t.h=heuristic(&neighbours1[sub],destination);
+    	//Node t;
+    	neighbours1[sub].g=1;
+    	neighbours1[sub].h=heuristic(&neighbours1[sub],destination);
     	//Node t1;
     	
-    	new_starts[sub] = t; 	
+    	new_starts[sub] = neighbours1[sub]; 	
 		//t1= new_starts[sub];
 	}
     
@@ -262,7 +261,7 @@ void a_star(Node *start, Node *destination)
     	cout<<"Start\n";
     	cout<<"vicini: " <<counterNeg <<"\n";
 		Path path_array[counterNeg];
-    		double beg = omp_get_wtime();
+    	double beg = omp_get_wtime();
 		#pragma omp parallel
 		{ 
     		
@@ -274,8 +273,8 @@ void a_star(Node *start, Node *destination)
     				#pragma omp task private(neighbours1,counterNeg)
     				{
     					cout<<"\n Numero thread: "<<omp_get_thread_num();
-		    			int nThread = omp_get_thread_num();
-		    			cout <<"\n thread: " << nThread;
+		    //			int nThread = omp_get_thread_num();
+		  //  			cout <<"\n thread: " << nThread;
 						set<Node> openList;
 				    	list<Node> *closedList=new list<Node>;
 				    	bool found = false;
@@ -286,15 +285,11 @@ void a_star(Node *start, Node *destination)
 						
 						openList.insert(new_starts[neg]);
 						closedList->push_back(*start);
-						list<Node>::iterator it=closedList->begin();
+						//list<Node>::iterator it=closedList->begin();
 					//Node c =*it;
 					
 					
-			    		//to create successors
-						int vc, vr;
-			    
-			    		int dy[8] = {0, 1, 0, -1,1,-1,-1,1}; //row
-			    		int dx[8] = {-1, 0, 1, 0,1,-1,1,-1}; //col
+			    		
 			
 			    		while(!openList.empty()) //per parallelizzazione meglio for
 			    		{
@@ -331,7 +326,7 @@ void a_star(Node *start, Node *destination)
 									openList.erase(openList.begin(),openList.end());
 									int nThread = omp_get_thread_num();
 									double cost=neighbours1[pind].g;
-									//end=omp_get_wtime();
+									end=omp_get_wtime();
 									//printPath(*closedList,*start);
 									path_array[neg].cost=cost;
 									path_array[neg].numThread=nThread;
@@ -415,8 +410,8 @@ void a_star(Node *start, Node *destination)
 						}
 						else
 						{
-							//cout<<"Trovato!\n" << "time " << end-beg;
-							cout<<"il nodo ";
+							cout<<"Trovato!\n" << "time " << end-beg;
+							//cout<<"il nodo ";
 							
 							
 						}
@@ -521,8 +516,8 @@ int main()
 	/*generateDest();
 	dest.Nrow=destR; 
 	dest.Ncol=destC;*/
-	dest.Nrow=4999;
-	dest.Ncol=4998;
+	dest.Nrow=499;
+	dest.Ncol=499;
 
 	
 
