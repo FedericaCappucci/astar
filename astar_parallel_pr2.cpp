@@ -305,7 +305,7 @@ void a_star(Node *start, Node *destination)
 							openList.erase(openList.begin());
 							closedList->push_back(current);
 			        
-			        		cout<<"nodo corrente"<<current.Ncol<<" " <<current.Nrow<<"\n";
+			        		//cout<<"nodo corrente"<<current.Ncol<<" " <<current.Nrow<<"\n";
 			        		//static threads
 			        		//#pragma omp parallel for schedule(static)
 			        		//find near nodes of my current one 
