@@ -75,15 +75,14 @@ int Search(Node& toSearch, set<Node> l)
 			
 		for(it=l.begin();it!=l.end();++it)
 		{	
-			#pragma omp 
-			{
+			
 				Node c = *it;	
 				if((c.Ncol==toSearch.Ncol)&&(c.Nrow==toSearch.Nrow))
 				{
 					find=i;
 				}
 				i++;
-			}
+			
 		}
 	//}
 	//double end=omp_get_wtime();
