@@ -255,7 +255,7 @@ void a_star(Node *start, Node *destination)
     		
     		#pragma omp single nowait
     		{
-			Node starts_new[counterNeg]=neighbours1;
+			Node starts_new[counterNeg]=neighbours1[counterNeg];
     			for(int neg=0;neg<counterNeg;neg++)
     			{  	
     				#pragma omp task private(neighbours1,counterNeg)
