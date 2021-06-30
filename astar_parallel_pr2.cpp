@@ -333,7 +333,7 @@ void a_star(Node *start, Node *destination)
 					            	
 										//startTime=omp_get_wtime();
 										disp=Search(neighbours1[pind],openList);
-										cout<<"trovato in openList\n";
+										//cout<<"trovato in openList\n";
 										set<Node>::iterator it=openList.begin(); 
 										advance(it,disp);
 										Node app= *it;	 
@@ -348,12 +348,12 @@ void a_star(Node *start, Node *destination)
 											openList.insert(neighbours1[pind]);
 										}
 									}	
-									if(Search(neighbours1[pind],*closedList)!=-1) //node is already in ClosedList. This function return the displacement for the iterator
+									if(Search(neighbours1[pind],*closedList)==-1) //node is already in ClosedList. This function return the displacement for the iterator
 					            			{
 					            			/*int disp=0;
 					            			disp=Search(neighbours1[pind],*closedList);*/
 					            	
-											cout <<"trovato in closed list\n";
+											//cout <<"trovato in closed list\n";
 											/*list<Node>::iterator it=closedList->begin(); 
 											advance(it,disp);
 											Node app= *it;	 
@@ -367,15 +367,16 @@ void a_star(Node *start, Node *destination)
 												neighbours1[pind].Pcol=current.Ncol;
 												closedList->push_back(neighbours1[pind]);
 											}*/
-									}
-									else
-									{
 										neighbours1[pind].Prow=current.Nrow;
 										neighbours1[pind].Pcol=current.Ncol;
 					            	
 										//	closedList.insert(successor);
 										openList.insert(neighbours1[pind]);
 									}
+									/*else
+									{
+										
+									}*/
 								}
 							}
 						
