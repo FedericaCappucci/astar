@@ -255,7 +255,7 @@ void a_star(Node *start, Node *destination)
     		{
     			for(int neg=0;neg<counterNeg;neg++)
     			{  
-    				#pragma omp task private(neighbours1)
+    				#pragma omp task private(neighbours1,counterNeg)
     				{
     					cout<<"\n Numero thread: "<<omp_get_thread_num();
 		    			int nThread = omp_get_thread_num();
