@@ -523,8 +523,8 @@ int main()
 	/*generateDest();
 	dest.Nrow=destR; 
 	dest.Ncol=destC;*/
-	dest.Nrow=2999; //4999 for 5000x5000 matrix 2440  then 2999 
-	dest.Ncol=2999; //4998 for 5000x5000 matrix 2445 then 2999
+	dest.Nrow=999; //4999 for 5000x5000 matrix 2440  then 2999 
+	dest.Ncol=999; //4998 for 5000x5000 matrix 2445 then 2999
 
 	
 
