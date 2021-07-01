@@ -524,7 +524,7 @@ int main()
 	dest.Nrow=destR; 
 	dest.Ncol=destC;*/
 	dest.Nrow=999; //4999 for 5000x5000 matrix 2440  then 2999 
-	dest.Ncol=999; //4998 for 5000x5000 matrix 2445 then 2999
+	dest.Ncol=998; //4998 for 5000x5000 matrix 2445 then 2999
 
 	
 
