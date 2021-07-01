@@ -6,8 +6,8 @@
 using namespace std;
 using std::endl;
 
-const int ROW=1000;
-const int COL=1000;
+const int ROW=2000;
+const int COL=2000;
 int destR;
 int destC;
 
