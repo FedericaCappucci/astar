@@ -229,7 +229,7 @@ void a_star(Node *start, Node *destination)
     double end=0;
     int counterNeg=0; //count the neighbours which are valid
     omp_set_dynamic(0); // Explicitly disable dynamic teams
-    omp_set_num_threads(1); // Use N threads for all parallel regions
+    omp_set_num_threads(8); // Use N threads for all parallel regions
     
     
     neighbours1 = setNeighbours((Node)(*start), &counterNeg);
