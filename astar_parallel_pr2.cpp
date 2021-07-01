@@ -229,7 +229,7 @@ void a_star(Node *start, Node *destination)
     double end=0;
     int counterNeg=0; //count the neighbours which are valid
     omp_set_dynamic(0); // Explicitly disable dynamic teams
-    omp_set_num_threads(1); // Use N threads for all parallel regions
+    omp_set_num_threads(8); // Use N threads for all parallel regions
     
     
     neighbours1 = setNeighbours((Node)(*start), &counterNeg);
@@ -507,7 +507,7 @@ int main()
 	Node dest;
 	//cout<<"Ncol: " <<COL<<"\n";
 	start.Nrow=0;
-	start.Ncol=2; //7 for 5000x5000 matrix 6  for 3000x3000 2
+	start.Ncol=2; //7 for 5000x5000 matrix 6  for 3000x3000 2, 2 for 1000x1000
  //       startTime=omp_get_wtime();
 	//printmatrix2();
 	
@@ -523,8 +523,8 @@ int main()
 	/*generateDest();
 	dest.Nrow=destR; 
 	dest.Ncol=destC;*/
-	dest.Nrow=999; //4999 for 5000x5000 matrix 2440  then 2999 
-	dest.Ncol=998; //4998 for 5000x5000 matrix 2445 then 2999
+	dest.Nrow=1999; //4999 for 5000x5000 matrix 2440  then 2999, 999 for 1000x1000 
+	dest.Ncol=1999; //4998 for 5000x5000 matrix 2445 then 2999, 998 for 1000x1000
 
 	
 
