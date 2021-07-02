@@ -141,4 +141,3 @@ bool valida(int riga, int colonna,int ROW)
 	return 0;
 }*/
 
-
