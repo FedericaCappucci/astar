@@ -229,11 +229,11 @@ void a_star(Node *start, Node *destination)
     double end=0;
     int counterNeg=0; //count the neighbours which are valid
     omp_set_dynamic(0); // Explicitly disable dynamic teams
-    omp_set_num_threads(1); // Use N threads for all parallel regions
+    omp_set_num_threads(8); // Use N threads for all parallel regions
     
     
     neighbours1 = setNeighbours((Node)(*start), &counterNeg);
-	cout <<"vicini : " << counterNeg;
+	//cout <<"vicini : " << counterNeg;
     for (int sub=0; sub<counterNeg; sub++)
     {
     	Node t;
@@ -274,7 +274,7 @@ void a_star(Node *start, Node *destination)
     			{  	
     				#pragma omp task private(neighbours1,counterNeg)
     				{
-    					//cout<<"\n Numero thread: "<<omp_get_thread_num();
+    					cout<<"\n Numero thread: "<<omp_get_thread_num() <<"\n";
 		    			int nThread = omp_get_thread_num();
 		    			double startTimeTh,endTimeTh;
 		    			//cout <<"\n thread: " << nThread;
@@ -365,7 +365,7 @@ void a_star(Node *start, Node *destination)
 										{
 											openList.erase(it); // debugger
 					            			
-					            			neighbours1[pind].Prow=current.Nrow;
+					            					neighbours1[pind].Prow=current.Nrow;
 											neighbours1[pind].Pcol=current.Ncol;
 											/*neighbours1[pind].Prow=neighbours1[pind].Nrow-dy[pind];
 											neighbours1[pind].Pcol=neighbours1[pind].Ncol-dx[pind];*/
@@ -427,8 +427,8 @@ void a_star(Node *start, Node *destination)
 						else
 						{
 							cout<<"Thread: " << path_array[neg].numThread << "path found in time:  " << endTimeTh-startTimeTh <<"with cost: " << path_array[neg].cost <<"\n";
-					
 						}
+						
 						
 						
 					//cout<<"\n closedList: \n";
