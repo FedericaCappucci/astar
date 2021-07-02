@@ -133,11 +133,11 @@ void generateDest()
 	destR=riga; 
 	destC=colon;
 }
-/*int main()
+int main()
 {
 	generateMatrix();
 	writeFile();
 	return 0;
-}*/
+}
 
 
