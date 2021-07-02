@@ -21,7 +21,7 @@ struct Node
     int Nrow,Ncol;
     double g,h;
     int Prow,Pcol;
-    bool isObstacle = false;
+    
 
     public:
 	    bool operator<(const Node& other )const
@@ -229,7 +229,7 @@ void a_star(Node *start, Node *destination)
     double end=0;
     int counterNeg=0; //count the neighbours which are valid
     omp_set_dynamic(0); // Explicitly disable dynamic teams
-    omp_set_num_threads(8); // Use N threads for all parallel regions
+    omp_set_num_threads(1); // Use N threads for all parallel regions
     
     
     neighbours1 = setNeighbours((Node)(*start), &counterNeg);
@@ -276,13 +276,14 @@ void a_star(Node *start, Node *destination)
     				{
     					//cout<<"\n Numero thread: "<<omp_get_thread_num();
 		    			int nThread = omp_get_thread_num();
+		    			double startTimeTh,endTimeTh;
 		    			//cout <<"\n thread: " << nThread;
 						set<Node> openList;
 				    	list<Node> *closedList=new list<Node>;
 				    	bool found = false;
 					//Node * neighbours1=new Node[8];
 					
-				    	//beg=omp_get_wtime();
+				    	startTimeTh=omp_get_wtime();
 				    	//openList.insert(*start);
 						
 						openList.insert(new_starts[neg]);
@@ -292,10 +293,10 @@ void a_star(Node *start, Node *destination)
 					
 					
 			    		//to create successors
-						int vc, vr;
+						/*int vc, vr;
 			    
 			    		int dy[8] = {0, 1, 0, -1,1,-1,-1,1}; //row
-			    		int dx[8] = {-1, 0, 1, 0,1,-1,1,-1}; //col
+			    		int dx[8] = {-1, 0, 1, 0,1,-1,1,-1}; //col*/
 			
 			    		while(!openList.empty()) //per parallelizzazione meglio for
 			    		{
@@ -330,16 +331,21 @@ void a_star(Node *start, Node *destination)
 									neighbours1[pind].Pcol=current.Ncol;
 									closedList->push_back(neighbours1[pind]);
 									openList.erase(openList.begin(),openList.end());
+									
+									//save the information about thread that found the path and about cost
 									int nThread = omp_get_thread_num();
 									double cost=neighbours1[pind].g;
-									//end=omp_get_wtime();
 									//printPath(*closedList,*start);
 									path_array[neg].cost=cost;
 									path_array[neg].numThread=nThread;
 									
+									//time check
+									endTimeTh=omp_get_wtime();
+									
 									//FREE memory 
 									delete closedList;
 									delete neighbours1;
+									//exit condition 
 									found=true;
 									
 								}
@@ -407,19 +413,21 @@ void a_star(Node *start, Node *destination)
 							
 							
 					    }
-					    //delete closedList;
+					    
+					    // if path found(there could be walls between starting node and destination
 					   if(found!=true)
 						{
-							cout<<"can't reach the destination";
+							
+							cout<<"Thread: " << path_array[neg].numThread << "can't reach the destination! Time: " << endTimeTh-startTimeTh <<"\n";
+							
+							//free allocated memory
 						  	delete closedList;
 							delete [] neighbours1;
 						}
 						else
 						{
-							//cout<<"Trovato!\n" << "time " << end-beg;
-							//cout<<"il nodo ";
-							
-							
+							cout<<"Thread: " << path_array[neg].numThread << "path found in time:  " << endTimeTh-startTimeTh <<"with cost: " << path_array[neg].cost <<"\n";
+					
 						}
 						
 						
@@ -441,10 +449,10 @@ void a_star(Node *start, Node *destination)
 				}//for 
 			} //end of single thread
 		}//end of parallel implicit barrier
-		for (int g=0; g<counterNeg;g++)
-		{
-			//cout <<"\n costi: "<< path_array[g].cost<<"\n";
-		}
+		
+	
+		cout <<"The thread that have found the path with lowest cost is: " << path_array[0].numThread <<"with cost: " << path_array[0].cost <<"\n";
+		
 	} //if
 
   
@@ -523,8 +531,8 @@ int main()
 	/*generateDest();
 	dest.Nrow=destR; 
 	dest.Ncol=destC;*/
-	dest.Nrow=3999; //4999 for 5000x5000 matrix 2440  then 2999, 999 for 1000x1000, 1999 for 2000x2000, 6999 for 7000x7000
-	dest.Ncol=3997; //4998 for 5000x5000 matrix 2445 then 2999, 998 for 1000x1000,1999 for 2000x2000,6999 for 7000x7000
+	dest.Nrow=3999; //4999 for 5000x5000 matrix 2440  then 2999, 999 for 1000x1000, 1999 for 2000x2000
+	dest.Ncol=3997; //4998 for 5000x5000 matrix 2445 then 2999, 998 for 1000x1000,1999 for 2000x2000
 
 	
 
