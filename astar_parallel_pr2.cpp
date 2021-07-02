@@ -14,8 +14,17 @@ using namespace std;
 
 double startTime;
 double endTime;
+//This will contain the grid read from the file "Matrix.txt"
 int *matrix= (int*) calloc(ROW*COL,sizeof(int));
 
+/* Contains all the information about the element of the matrix:
+	-Nrow,Ncol are int values that rappresent the number of coloumn and row of each Node
+	- g is 
+	-h is heuristic function computed by "Euclide" method 
+	-Prow,Pcol are int values that rappresents the cloumn and the row of the previous node (The one that generates the current one)
+	
+	Note that: the cost function f is not defined because the information was reduntant as it can be easly obtained by the sum of g and h.
+*/
 struct Node
 {
     int Nrow,Ncol;
@@ -24,6 +33,7 @@ struct Node
     
 
     public:
+    //This is needed to compare 2 nodes using their cost function f
 	    bool operator<(const Node& other )const
 	    {
 	    	if((Ncol==other.Ncol)&&(Nrow==other.Nrow))
@@ -42,6 +52,7 @@ struct Node
 				}
 			}
 	    }
+	    //needed to free the memory after the path is found
 	    static void operator delete(void* ptr, std::size_t sz)
     	    {
         		//cout << "custom delete for size " << sz <<endl;
@@ -50,6 +61,11 @@ struct Node
 	
 	   
 };
+/* 
+ This struct will contain:
+	-The number of thread that have founded the path
+	-the cost of the path founded if there is one.
+*/
 typedef struct path
 {
 	double cost;
@@ -57,11 +73,13 @@ typedef struct path
 	
 } Path;
 
+// This function will be called when the memory is not enough to allocate dynamically space (usefull only with "new" operator)
 void no_memory()
 {
 	cout<<"not enough memory";
 	exit (1);
 }
+
 int Search(Node& toSearch, set<Node> l)
 {
 	set<Node>::iterator it;
@@ -221,6 +239,34 @@ void printPath(list<Node> closedList,Node start)
         //cout<< "\n\n time: " << endTime-startTime<<"\n";
 }
 
+void swap(Path * array, int l, int r) {
+    Path tmp = array[l];
+    array[l] = array[r];
+    array[r] = tmp;
+}
+
+void quickSort(Path * array, int begin, int end) {
+    float pivot;
+    int l, r;
+    if (end > begin) {
+        pivot = array[begin].cost;
+        l = begin + 1;
+        r = end + 1;
+        while (l < r)
+            if (array[l].cost < pivot)
+                l++;
+            else {
+                r--;
+                swap(array, l, r);
+            }
+        l--;
+        swap(array, begin, l);
+        quickSort(array, begin, l);
+        quickSort(array, r, end);
+    }
+}
+
+
 void a_star(Node *start, Node *destination)
 {
     Node * neighbours1= new Node[8];
@@ -233,7 +279,7 @@ void a_star(Node *start, Node *destination)
     
     
     neighbours1 = setNeighbours((Node)(*start), &counterNeg);
-	//cout <<"vicini : " << counterNeg;
+	cout <<"vicini : " << counterNeg;
     for (int sub=0; sub<counterNeg; sub++)
     {
     	Node t;
@@ -274,31 +320,21 @@ void a_star(Node *start, Node *destination)
     			{  	
     				#pragma omp task private(neighbours1,counterNeg)
     				{
-    					cout<<"\n Numero thread: "<<omp_get_thread_num() <<"\n";
-		    			int nThread = omp_get_thread_num();
+    					//cout<<"\n Numero thread: "<<omp_get_thread_num();
+    					//definition of variables: 
 		    			double startTimeTh,endTimeTh;
-		    			//cout <<"\n thread: " << nThread;
 						set<Node> openList;
 				    	list<Node> *closedList=new list<Node>;
 				    	bool found = false;
-					//Node * neighbours1=new Node[8];
-					
+				    	//starting time: 
 				    	startTimeTh=omp_get_wtime();
 				    	//openList.insert(*start);
 						
 						openList.insert(new_starts[neg]);
 						closedList->push_back(*start);
 						list<Node>::iterator it=closedList->begin();
-					//Node c =*it;
 					
-					
-			    		//to create successors
-						/*int vc, vr;
-			    
-			    		int dy[8] = {0, 1, 0, -1,1,-1,-1,1}; //row
-			    		int dx[8] = {-1, 0, 1, 0,1,-1,1,-1}; //col*/
-			
-			    		while(!openList.empty()) //per parallelizzazione meglio for
+			    		while(!openList.empty()) 
 			    		{
 			    	
 			    			if(found) break;
@@ -306,20 +342,12 @@ void a_star(Node *start, Node *destination)
 							Node current = *openList.begin();
 							openList.erase(openList.begin());
 							closedList->push_back(current);
-			        
-			        		//cout<<"nodo corrente"<<current.Ncol<<" " <<current.Nrow<<"\n";
-			        		//static threads
-			        		//#pragma omp parallel for schedule(static)
-			        		//find near nodes of my current one 
+			    
 			        		neighbours1= setNeighbours(current,&counterNeg);
 							for(int pind = 0; pind<counterNeg; pind++) //8 position possible 
 							{
 								
-						    	//vr = current.Nrow + dy[pind]; //row
-								//vc = current.Ncol + dx[pind]; //col
-							    
 							    neighbours1[pind].g=current.g+1;
-							    //not sure it will work
 							    neighbours1[pind].h=heuristic(&neighbours1[pind],destination);
 							//    Node successor= neighbours1[pind];
 			 
@@ -365,7 +393,7 @@ void a_star(Node *start, Node *destination)
 										{
 											openList.erase(it); // debugger
 					            			
-					            					neighbours1[pind].Prow=current.Nrow;
+					            			neighbours1[pind].Prow=current.Nrow;
 											neighbours1[pind].Pcol=current.Ncol;
 											/*neighbours1[pind].Prow=neighbours1[pind].Nrow-dy[pind];
 											neighbours1[pind].Pcol=neighbours1[pind].Ncol-dx[pind];*/
@@ -427,8 +455,8 @@ void a_star(Node *start, Node *destination)
 						else
 						{
 							cout<<"Thread: " << path_array[neg].numThread << "path found in time:  " << endTimeTh-startTimeTh <<"with cost: " << path_array[neg].cost <<"\n";
+					
 						}
-						
 						
 						
 					//cout<<"\n closedList: \n";
@@ -449,6 +477,7 @@ void a_star(Node *start, Node *destination)
 				}//for 
 			} //end of single thread
 		}//end of parallel implicit barrier
+		quickSort(path_array,0,counterNeg-1);
 		
 	
 		cout <<"The thread that have found the path with lowest cost is: " << path_array[0].numThread <<"with cost: " << path_array[0].cost <<"\n";
