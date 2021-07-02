@@ -45,7 +45,7 @@ void generateMatrix()
 		       		do{
 			       		int v2 = rand() % 100 + 1;
 			       		bool valid = exi(i,c);
-			       		if((v2>=0)&&(v2<70))
+			       		if((v2>=0)&&(v2<75))
 			       		{
 			       			//then not obstacle
 			       			if(valid==true)
@@ -81,7 +81,10 @@ void writeFile()
 			    {
 			    	my_file << Matrix[i*ROW+c];
 			    }
-			    my_file <<endl;
+			    if(i<ROW-1)
+			    {
+			    	my_file <<endl;
+			    }
 			}
 			my_file.close();
 	  	}
