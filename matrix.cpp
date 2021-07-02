@@ -6,18 +6,18 @@
 using namespace std;
 using std::endl;
 
-const int ROW=4000;
+/*const int ROW=4000;
 const int COL=4000;
 int destR;
-int destC;
+int destC;*/
 
 
 
 //1 not obstacle 0 is obstacle
 //int matrix[ROW][COL];
-int *Matrix= (int*) calloc(ROW*COL,sizeof(int));
+int *Matrix;
 
-bool exi(int i,int c)
+bool exi(int i,int c,int ROW)
 {
 	if(i!=0)
 	{
@@ -34,29 +34,30 @@ int random_int(int min, int max)
 {
    return min + rand() % (max+1 - min);
 }
-void generateMatrix()
+void generateMatrix(int row,int col)
 {
+	Matrix = (int*) calloc(row*col,sizeof(int));
 	srand(time(NULL));
-		for(int i=0;i<ROW;i++)
+		for(int i=0;i<row;i++)
 		{
-		       for(int c=0;c<COL;c++)
+		       for(int c=0;c<col;c++)
 		       {   		
 		       		bool esci=true;
 		       		do{
 			       		int v2 = rand() % 100 + 1;
-			       		bool valid = exi(i,c);
+			       		bool valid = exi(i,c,row);
 			       		if((v2>=0)&&(v2<75))
 			       		{
 			       			//then not obstacle
 			       			if(valid==true)
 			       				//my_file << "1" ;
-			       				Matrix[i*ROW+c]=1;
+			       				Matrix[i*row+c]=1;
 			       		}
 			       		else
 			       		{
 			       			//obstacle
 			       			if(valid==true)
-			       				Matrix[i*ROW+c]=0;
+			       				Matrix[i*row+c]=0;
 			       				//my_file << "0";
 			       		}
 			       		//exi(i,c);
@@ -68,7 +69,7 @@ void generateMatrix()
 		//my_file.close();
 	
 }
-void writeFile()
+void writeFile(int ROW,int COL)
 {
 	ofstream my_file("Matrix.txt",std::ofstream::out);
 	//exception handling
@@ -99,19 +100,19 @@ void writeFile()
 	
 }
 
-void printmatrix()
+/*void printmatrix()
 {
 	for(int i=0;i<ROW;i++)
 	{
-	       for(int c=0;c<COL;c++)
+	       for(int c=0;c<COL1;c++)
 	       {
-	       		cout <<" "<<Matrix[i*ROW+c];
+	       		cout <<" "<<Matrix[i*ROW1+c];
 	       	
 	       }
 	    cout<<"\n";
 	}
-}
-bool valida(int riga, int colonna)
+}*/
+bool valida(int riga, int colonna,int ROW)
 {
 	if(Matrix[riga*ROW+colonna]==1)
 	{	
@@ -119,20 +120,20 @@ bool valida(int riga, int colonna)
 	}
 	return false;
 }
-void generateDest()
+/*void generateDest()
 {
 	srand(time(NULL));
 	int riga;
 	int colon;
 	do{
-		riga = random_int(ROW-3,ROW);
-		colon = random_int(COL-3,COL);
+		riga = random_int(ROW1-3,ROW1);
+		colon = random_int(COL1-3,COL1);
 		
 	}
 	while(valida(riga,colon)!=true);
 	destR=riga; 
 	destC=colon;
-}
+}*/
 /*int main()
 {
 	generateMatrix();
