@@ -25,6 +25,6 @@ void buildMatrix(int row, int col) {
 
 int main()
 {
-	buildMatrix(4000,4000)
+	buildMatrix(4000,4000);
 	return 0;
 }
