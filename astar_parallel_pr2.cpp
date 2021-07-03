@@ -24,9 +24,9 @@ int *matrix;
 
 /* Contains all the information about the element of the matrix:
 	-Nrow,Ncol are int values that rappresent the number of coloumn and row of each Node
-	- g is 
+	- g is the cost to move from the source node to a given node
 	-h is heuristic function computed by "Euclide" method 
-	-Prow,Pcol are int values that rappresents the cloumn and the row of the previous node (The one that generates the current one)
+	-Prow,Pcol are int values that represents the column and the row of the previous node (The one that generates the current one)
 	
 	Note that: the cost function f is not defined because the information was reduntant as it can be easly obtained by the sum of g and h.
 */
@@ -85,6 +85,7 @@ void no_memory()
 	exit (1);
 }
 
+//finds the position of the node in a given set
 int Search(Node& toSearch, set<Node> l)
 {
 	set<Node>::iterator it;
@@ -146,6 +147,8 @@ Node * setNeighbours(Node current, int *c)
 	//array_neigh = neighbours_array;
 	return neighbours_array;	
 }
+
+//finds the position of a node in a list
 int Search(Node& toSearch, list<Node> l)
 {
 	list<Node>::iterator it;
@@ -174,6 +177,8 @@ bool isValid(int row, int col)
     return ((row >= 0) && (row < ROW) && (col >= 0)
            && (col < COL)) &&(matrix[row*ROW+col]!=0); //if matrix[][] =0 the is an obstacle
 }
+
+//check if a node is the destination node
 bool isDestination(Node succ,Node dest) 
 { 
 	if (succ.Ncol == dest.Ncol && succ.Nrow == dest.Nrow) 
@@ -182,7 +187,7 @@ bool isDestination(Node succ,Node dest)
 		return false; 
 } 
 
-//euclide
+//euclidean distance
 double heuristic(Node* current_cell,Node *goal)
 {
 
@@ -251,6 +256,8 @@ void swap(Path * array, int l, int r) {
     array[r] = tmp;
 }
 
+//This function orders the array in an ascending order with respect
+//to the cost of paths
 void quickSort(Path * array, int begin, int end) {
     float pivot;
     int l, r;
@@ -583,7 +590,7 @@ int main(int argc, char * argv[])
 		//start.Nrow=0;
 		//start.Ncol=2; //7 for 5000x5000 matrix 6  for 3000x3000 2, 2 for 1000x1000
 		
-		
+		//checks if the start node is valid
 		if(isValid(atoi(argv[4]),atoi(argv[5]))==false)
 		{
 			cout <<"Invalid start";
@@ -599,6 +606,8 @@ int main(int argc, char * argv[])
 		//4998 for 5000x5000 matrix 2445 then 2999, 998 for 1000x1000,1999 for 2000x2000
 	
 		//cout<< "\ndestinazione : " << dest.Nrow <<" " <<dest.Ncol<<"\n"; 
+		
+		//checks if the destination node is valid
 		if(isValid(atoi(argv[6]),atoi(argv[7]))==false)
 		{
 			cout <<"Invalid destination";
