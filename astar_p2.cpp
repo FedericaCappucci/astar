@@ -79,24 +79,24 @@ int Search(Node& toSearch, set<Node> l)
 	
 	int i=0;
 	int find=-1;
-	#pragma omp parallel
-	{
+	//#pragma omp parallel
+	//{
 		/*cout<<"Thread: " << omp_get_thread_num(); ;
 		cout<<"\n";*/
 			
 		for(it=l.begin();it!=l.end();++it)
 		{	
-			#pragma omp task
-			{
+	//		#pragma omp task
+	//		{
 				Node c = *it;	
 				if((c.Ncol==toSearch.Ncol)&&(c.Nrow==toSearch.Nrow))
 				{
 					find=i;
 				}
 				i++;
-			}
+	//		}
 		}
-	}
+	//}
 	//double end=omp_get_wtime();
 	//cout<<"ricerca: " << end-startTime <<"\n";
 	return find;
