@@ -24,9 +24,9 @@ int *matrix;
 
 /* Contains all the information about the element of the matrix:
 	-Nrow,Ncol are int values that rappresent the number of coloumn and row of each Node
-	- g is the cost to move from the source node to a given node
+	- g is 
 	-h is heuristic function computed by "Euclide" method 
-	-Prow,Pcol are int values that represents the column and the row of the previous node (The one that generates the current one)
+	-Prow,Pcol are int values that rappresents the cloumn and the row of the previous node (The one that generates the current one)
 	
 	Note that: the cost function f is not defined because the information was reduntant as it can be easly obtained by the sum of g and h.
 */
@@ -85,7 +85,6 @@ void no_memory()
 	exit (1);
 }
 
-//finds the position of the node in a given set
 int Search(Node& toSearch, set<Node> l)
 {
 	set<Node>::iterator it;
@@ -147,8 +146,6 @@ Node * setNeighbours(Node current, int *c)
 	//array_neigh = neighbours_array;
 	return neighbours_array;	
 }
-
-//finds the position of a node in a list
 int Search(Node& toSearch, list<Node> l)
 {
 	list<Node>::iterator it;
@@ -173,12 +170,9 @@ bool isValid(int row, int col)
 {
     // Returns true if row number and column number
     // is in range
-
     return ((row >= 0) && (row < ROW) && (col >= 0)
            && (col < COL)) &&(matrix[row*ROW+col]!=0); //if matrix[][] =0 the is an obstacle
 }
-
-//check if a node is the destination node
 bool isDestination(Node succ,Node dest) 
 { 
 	if (succ.Ncol == dest.Ncol && succ.Nrow == dest.Nrow) 
@@ -187,7 +181,7 @@ bool isDestination(Node succ,Node dest)
 		return false; 
 } 
 
-//euclidean distance
+//euclide
 double heuristic(Node* current_cell,Node *goal)
 {
 
@@ -256,8 +250,6 @@ void swap(Path * array, int l, int r) {
     array[r] = tmp;
 }
 
-//This function orders the array in an ascending order with respect
-//to the cost of paths
 void quickSort(Path * array, int begin, int end) {
     float pivot;
     int l, r;
@@ -532,14 +524,14 @@ void readPath(string nomeFile)
 }
 
 /* Inputs from command line:
-	-argv[1] number of rows in your grid
-	-argv[2] number of columns in your grid
-	-argv[3] t: if you want to generate a new matrix or f: if you want to read it from file named "Matrix.txt"
-	-argv[4] row of start Node
-	-argv[5] column of start Node 
-	-argv[6] row of destination Node
-	-argv[7] column of destination Node
-	-argv[8] number of thread that you want to use 0 < n <=8 
+	-argv[1] number of thread that you want to use 0 < n <=8
+	-argv[2] row of start Node
+	-argv[3] column of start Node
+	-argv[4] row of destination Node
+	-argv[5] column of destination Node
+	-argv[6] number of rows in your grid
+	-argv[7] number of columns in your grid
+	-argv[8] t: if you want to generate a new matrix or f: if you want to read it from file named "Matrix.txt"
 */
 int main(int argc, char * argv[])
 {
@@ -549,31 +541,58 @@ int main(int argc, char * argv[])
 	set_new_handler(no_memory);
 	if (argc >= 8) 
 	{
-		if ((atoi(argv[8]) <= 0)||(atoi(argv[8])>NUM_MAX_THREAD))
-			{
-		    cout<<"Not a valid number for threads.Please set a value between o and " << NUM_MAX_THREAD <<"\n";
-		    return 5;
+        if ((atoi(argv[1]) <= 0)||(atoi(argv[1])>NUM_MAX_THREAD))
+		{
+            cout<<"Not a valid number for threads.Please set a value between o and " << NUM_MAX_THREAD <<"\n";
+            return 5;
+        }
+        //if number of threads is valid then set the parallel regions threads.
+        
+        omp_set_dynamic(0); // Explicitly disable dynamic teams
+    	omp_set_num_threads(8); // Use N threads for all parallel regions
+    	
+		// set start and destination node: 
+		Node start;
+		Node dest;
+	
+		//start.Nrow=0;
+		//start.Ncol=2; //7 for 5000x5000 matrix 6  for 3000x3000 2, 2 for 1000x1000
+	
+		if(isValid(atoi(argv[2]),atoi(argv[3]))==false)
+		{
+			cout <<"Invalid start";
+			return 5;
 		}
+		start.Nrow= atoi(argv[2]);
+		start.Ncol= atoi(argv[3]);
 		
-		//if number of threads is valid then set the parallel regions threads.
-		omp_set_dynamic(0); // Explicitly disable dynamic teams
-	    	omp_set_num_threads(atoi(argv[8])); // Use N threads for all parallel regions
-	    	
-	    	//set column and row of your grid: (the one you read or the one you wanto to generate)
-	    	if((atoi(argv[1])<=0)&&(atoi(argv[2])<=0))
+		//Destination: 
+	
+		//4999 for 5000x5000 matrix 2440  then 2999, 999 for 1000x1000, 1999 for 2000x2000
+		//4998 for 5000x5000 matrix 2445 then 2999, 998 for 1000x1000,1999 for 2000x2000
+	
+		//cout<< "\ndestinazione : " << dest.Nrow <<" " <<dest.Ncol<<"\n"; 
+		if(isValid(atoi(argv[4]),atoi(argv[5]))==false)
+		{
+			cout <<"Invalid destination";
+			return 5;
+		}
+		dest.Nrow= atoi(argv[4]);
+		dest.Ncol= atoi(argv[5]);
+		//Number of rows in the grid :
+		if((atoi(argv[6])<=0)&&(atoi(argv[7])<=0))
 		{
 			cout<<"Rows and columns numbers not valid!\n";
 			return 5;
 		}
-		ROW=atoi(argv[1]);
-		COL=atoi(argv[2]);
+		ROW=atoi(argv[6]);
+		COL=atoi(argv[7]);
 		matrix= (int*) calloc(ROW*COL,sizeof(int));
-		
+		printmatrix2();
 		//read matrix choice
-		if(argv[3]=="f")
+		if(argv[8]=="f")
 		{
 			readPath("Matrix.txt");
-			cout << "File read!\n";
 		}
 		else
 		{
@@ -582,44 +601,15 @@ int main(int argc, char * argv[])
 			readPath("Matrix.txt");
 		}
 		
-    	
-		// set start and destination node: 
-		Node start;
-		Node dest;
-	
-		//start.Nrow=0;
-		//start.Ncol=2; //7 for 5000x5000 matrix 6  for 3000x3000 2, 2 for 1000x1000
-		
-		//checks if the start node is valid
-		if(isValid(atoi(argv[4]),atoi(argv[5]))==false)
-		{
-			cout <<"Invalid start";
-			return 5;
-		}
-		start.Nrow= atoi(argv[4]);
-		start.Ncol= atoi(argv[5]);
-		
-		
-		//Destination: 
-	
-		//4999 for 5000x5000 matrix 2440  then 2999, 999 for 1000x1000, 1999 for 2000x2000
-		//4998 for 5000x5000 matrix 2445 then 2999, 998 for 1000x1000,1999 for 2000x2000
-	
-		//cout<< "\ndestinazione : " << dest.Nrow <<" " <<dest.Ncol<<"\n"; 
-		
-		//checks if the destination node is valid
-		if(isValid(atoi(argv[6]),atoi(argv[7]))==false)
-		{
-			cout <<"Invalid destination";
-			return 5;
-		}
-		dest.Nrow= atoi(argv[6]);
-		dest.Ncol= atoi(argv[7]);
-		
 		a_star(&start,&dest);
 		free(matrix);
 	//	cout<<"stampa: " << endTime-startTime <<"\n";
 		return 0;
 	
+	}
+	else
+	{
+		cout<<"Wrong number of parameters! They must be 8\n";
+		return 0;
 	}
 }
