@@ -45,19 +45,24 @@ void generateMatrix(int row,int col)
 		       		bool esci=true;
 		       		do{
 			       		int v2 = rand() % 100 + 1;
-			       		bool valid = exi(i,c,row);
+			       		cout<< "generate : " << v2 <<"\n";
+			       		//bool valid = exi(i,c,row);
 			       		if((v2>=0)&&(v2<75))
 			       		{
 			       			//then not obstacle
-			       			if(valid==true)
+			       			//if(valid==true)
+			       				cout<<"uno: ";
 			       				//my_file << "1" ;
 			       				Matrix[i*row+c]=1;
+			       				cout<<Matrix[i*row+c]<<"\n";
 			       		}
 			       		else
 			       		{
 			       			//obstacle
-			       			if(valid==true)
+			       			//if(valid==true)
+			       				cout<<"zero: ";
 			       				Matrix[i*row+c]=0;
+			       				cout<<Matrix[i*row+c]<<"\n";
 			       				//my_file << "0";
 			       		}
 			       		//exi(i,c);
@@ -134,10 +139,11 @@ bool valida(int riga, int colonna,int ROW)
 	destR=riga; 
 	destC=colon;
 }*/
-/*int main()
+int main()
 {
-	generateMatrix();
-	writeFile();
+	generateMatrix(4000,4000);
+	writeFile(4000,4000);
 	return 0;
-}*/
+}
+
 
