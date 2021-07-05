@@ -51,18 +51,18 @@ void generateMatrix(int row,int col)
 			       		{
 			       			//then not obstacle
 			       			//if(valid==true)
-			       				cout<<"uno: ";
+			       				//cout<<"uno: ";
 			       				//my_file << "1" ;
 			       				Matrix[i*row+c]=1;
-			       				cout<<Matrix[i*row+c]<<"\n";
+			       				//cout<<Matrix[i*row+c]<<"\n";
 			       		}
 			       		else
 			       		{
 			       			//obstacle
 			       			//if(valid==true)
-			       				cout<<"zero: ";
+			       				//cout<<"zero: ";
 			       				Matrix[i*row+c]=0;
-			       				cout<<Matrix[i*row+c]<<"\n";
+			       				//cout<<Matrix[i*row+c]<<"\n";
 			       				//my_file << "0";
 			       		}
 			       		//exi(i,c);
@@ -139,11 +139,11 @@ bool valida(int riga, int colonna,int ROW)
 	destR=riga; 
 	destC=colon;
 }*/
-int main()
+/*int main()
 {
 	generateMatrix(4000,4000);
 	writeFile(4000,4000);
 	return 0;
-}
+}*/
 
 
