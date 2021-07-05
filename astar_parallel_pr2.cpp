@@ -321,7 +321,7 @@ void a_star(Node *start, Node *destination)
     	cout<<"Start\n";
     	//cout<<"vicini: " <<counterNeg <<"\n";
 		Path path_array[counterNeg];
-    		double beg = omp_get_wtime();
+    	double beg = omp_get_wtime();
 		#pragma omp parallel
 		{ 
     		
@@ -445,15 +445,7 @@ void a_star(Node *start, Node *destination)
 									}
 								}
 							}
-						
-				    		/*else
-				    		{
-				    			cout<<"non valido";
-							}*/
-							//fflush(stdout);
-							
-							
-							
+			
 					    }
 					    
 					    // if path found(there could be walls between starting node and destination
@@ -477,10 +469,12 @@ void a_star(Node *start, Node *destination)
 				}//for 
 			} //end of single thread
 		}//end of parallel implicit barrier
+		endTime=omp_get_wtime();
 		quickSort(path_array,0,counterNeg-1);
 		
 	
 		cout <<"\nThe thread that have found the path with lowest cost is: " << path_array[0].numThread <<" with cost: " << path_array[0].cost <<"\n";
+		cout<<"Execution time: " << endTime-beg;
 		
 	} //if
 
