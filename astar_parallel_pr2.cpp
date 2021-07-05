@@ -570,7 +570,7 @@ int main(int argc, char * argv[])
 		matrix= (int*) calloc(ROW*COL,sizeof(int));
 		
 		//read matrix choice
-		if(argv[3][0]=="f")
+		if(argv[3][0]=='f')
 		{
 			readPath("Matrix.txt");
 			cout << "File read!\n";
