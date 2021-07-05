@@ -624,7 +624,7 @@ int main(int argc, char * argv[])
 	}
 	else
 	{
-		cout<<"Wrong number of paramters!They must be: \n 1.Grid rows \n 2. Grid columns\n 3. t or f to generate grid or not \n 4. node start row \n 5. node start column \n 6. Node destination row\n 7.Node destination column\n 8. number of threads\n"
+		cout<<"Wrong number of paramters!They must be: \n 1.Grid rows \n 2. Grid columns\n 3. t or f to generate grid or not \n 4. node start row \n 5. node start column \n 6. Node destination row\n 7.Node destination column\n 8. number of threads\n";
 		return 0;
 	}
 }
