@@ -543,7 +543,7 @@ int main(int argc, char * argv[])
 	{
         if ((atoi(argv[1]) <= 0)||(atoi(argv[1])>NUM_MAX_THREAD))
 		{
-            cout<<"Not a valid number for threads.Please set a value between 8 and " << NUM_MAX_THREAD <<"\n";
+            cout<<"Not a valid number for threads.Please set a value between 0 and " << NUM_MAX_THREAD <<"\n";
             return 5;
         }
         //if number of threads is valid then set the parallel regions threads.
