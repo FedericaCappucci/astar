@@ -423,12 +423,12 @@ void a_star(Node *start, Node *destination)
 											list<Node>::iterator it=closedList->begin(); 
 											advance(it,disp);
 											Node app= *it;	 
-											/
+											
 											if((app.g+app.h)>(neighbours1[pind].g+neighbours1[pind].h))
 											{
 												closedList->erase(it); //debugger
-												neighbours1[pind].Prow=neighbours1[pind].Nrow-dy[pind];
-												neighbours1[pind].Pcol=neighbours1[pind].Ncol-dx[pind];
+												//neighbours1[pind].Prow=neighbours1[pind].Nrow-dy[pind];
+												//neighbours1[pind].Pcol=neighbours1[pind].Ncol-dx[pind];
 												neighbours1[pind].Prow=current.Nrow;
 												neighbours1[pind].Pcol=current.Ncol;
 												closedList->push_back(neighbours1[pind]);
