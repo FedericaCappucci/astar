@@ -551,9 +551,9 @@ int main(int argc, char * argv[])
 	{
 		if ((atoi(argv[8]) <= 0)||(atoi(argv[8])>NUM_MAX_THREAD))
 			{
-		    cout<<"Not a valid number for threads.Please set a value between o and " << NUM_MAX_THREAD <<"\n";
-		    return 5;
-		}
+		    	cout<<"Not a valid number for threads.Please set a value between 0 and " << NUM_MAX_THREAD <<"\n";
+		    	return 5;
+			}
 		
 		//if number of threads is valid then set the parallel regions threads.
 		omp_set_dynamic(0); // Explicitly disable dynamic teams
@@ -621,5 +621,10 @@ int main(int argc, char * argv[])
 	//	cout<<"stampa: " << endTime-startTime <<"\n";
 		return 0;
 	
+	}
+	else
+	{
+		cout<<"Wrong number of paramters!They must be: \n 1.Grid rows \n 2. Grid columns\n 3. t or f to generate grid or not \n 4. node start row \n 5. node start column \n 6. Node destination row\n 7.Node destination column\n 8. number of threads\n"
+		return 0;
 	}
 }
