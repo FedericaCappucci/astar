@@ -45,7 +45,7 @@ void generateMatrix(int row,int col)
 		       		bool esci=true;
 		       		do{
 			       		int v2 = rand() % 100 + 1;
-			       		cout<< "generate : " << v2 <<"\n";
+			       		//cout<< "generate : " << v2 <<"\n";
 			       		//bool valid = exi(i,c,row);
 			       		if((v2>=0)&&(v2<75))
 			       		{
