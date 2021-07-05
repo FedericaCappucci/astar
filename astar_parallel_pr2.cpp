@@ -551,7 +551,7 @@ int main(int argc, char * argv[])
 	{
 		if ((atoi(argv[8]) <= 0)||(atoi(argv[8])>NUM_MAX_THREAD))
 			{
-		    	cout<<"Not a valid number for threads.Please set a value between 0 and " << NUM_MAX_THREAD <<"\n";
+		    	cout<<"Not a valid number for threads.Please set a value between o and " << NUM_MAX_THREAD <<"\n";
 		    	return 5;
 			}
 		
@@ -570,7 +570,7 @@ int main(int argc, char * argv[])
 		matrix= (int*) calloc(ROW*COL,sizeof(int));
 		
 		//read matrix choice
-		if(argv[3]=="f")
+		if(argv[3][0]=="f")
 		{
 			readPath("Matrix.txt");
 			cout << "File read!\n";
@@ -579,6 +579,7 @@ int main(int argc, char * argv[])
 		{
 			generateMatrix(ROW,COL);
 			writeFile(ROW,COL);
+			cout << "File read!\n";
 			readPath("Matrix.txt");
 		}
 		
@@ -624,7 +625,6 @@ int main(int argc, char * argv[])
 	}
 	else
 	{
-		cout<<"Wrong number of paramters!They must be: \n 1.Grid rows \n 2. Grid columns\n 3. t or f to generate grid or not \n 4. node start row \n 5. node start column \n 6. Node destination row\n 7.Node destination column\n 8. number of threads\n";
-		return 0;
+		cout<<"Wrong number of paramters!They must be: \n 1.Grid rows \n 2. Grid columns\n 3. t or f to generate grid or not \n 4. node start row \n 5. node start column \n 6. Node destination row\n 7.Node destination column\n 8. number of threads\n";		return 0;
 	}
 }
