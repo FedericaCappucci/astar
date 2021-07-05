@@ -17,7 +17,7 @@ int destC;*/
 //int matrix[ROW][COL];
 int *Matrix;
 
-bool exi(int i,int c,int ROW)
+/*bool exi(int i,int c,int ROW)
 {
 	if((i!=0)&&(c!=0))
 	{
@@ -29,7 +29,7 @@ bool exi(int i,int c,int ROW)
 	}
 	return true;
 	
-}
+}*/
 int random_int(int min, int max)
 {
    return min + rand() % (max+1 - min);
@@ -42,15 +42,14 @@ void generateMatrix(int row,int col)
 		{
 		       for(int c=0;c<col;c++)
 		       {   		
-		       		bool esci=true;
-		       		do{
+
 			       		int v2 = rand() % 100 + 1;
 			       		//cout<< "generate : " << v2 <<"\n";
-			       		bool valid = exi(i,c,row);
+			       		//bool valid = exi(i,c,row);
 			       		if((v2>=0)&&(v2<75))
 			       		{
 			       			//then not obstacle
-			       			if(valid==true)
+			       			//if(valid==true)
 			       			//	cout<<"uno: ";
 			       				//my_file << "1" ;
 			       				Matrix[i*row+c]=1;
@@ -59,15 +58,14 @@ void generateMatrix(int row,int col)
 			       		else
 			       		{
 			       			//obstacle
-			       			if(valid==true)
+			       			//if(valid==true)
 			       		//		cout<<"zero: ";
 			       				Matrix[i*row+c]=0;
 			       			//	cout<<Matrix[i*row+c]<<"\n";
 			       				//my_file << "0";
 			       		}
 			       		//exi(i,c);
-			       	}
-			       	while(esci==false);
+			       
 		       }
 		       //my_file << endl;
 		}
