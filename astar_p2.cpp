@@ -8,8 +8,15 @@
 using namespace std;
 
 
+const int NUM_MAX_THREAD=8;
+
 double startTime;
 double endTime;
+int ROW;
+int COL;
+//This will contain the grid read from the file "Matrix.txt"
+int *matrix;
+
 struct Node
 {
     int Nrow,Ncol;
@@ -37,6 +44,34 @@ struct Node
 	    }
 	   
 };
+void readPath(string nomeFile)
+{
+	char c;
+	int num;
+	int i=0;
+	int j=0;
+	ifstream fin(nomeFile);
+	
+	while(fin.get(c))
+	{
+		if(c != '\n')
+		{
+			num= (int) c-48;
+			matrix[i*ROW + j] = num;
+			j++;
+		}
+		else
+		{
+			i++;
+			j=0;
+		}
+		
+		
+		
+	}
+	fin.close();
+	
+}
 
 int Search(Node& toSearch, set<Node> l)
 {
@@ -201,9 +236,9 @@ int a_star(Node *start, Node *destination)
         cout<<"nodo corrente"<<current.Ncol<<" " <<current.Nrow<<"\n";
         //static threads
         omp_set_num_threads(16);
-        #pragma omp parallel for schedule(static) shared(openList,closedList)
+        #pragma omp parallel for schedule(static) shared(openList,closedList) private(vc,vr,current)
         for(int pind = 0; pind<8; pind++) //4 position possible 
-	{
+		{
 		    cout<<"\n Thread astar_main: " << omp_get_thread_num(); ;
 		
             		vr = current.Nrow + dy[pind]; //row
@@ -225,7 +260,7 @@ int a_star(Node *start, Node *destination)
 	            	
 	            	successor.Prow=current.Nrow;
 	            	successor.Pcol=current.Ncol;
-	            	#pragma omp critical
+	            	#pragma omp critical (closedList)
 	            	{
 	            		closedList.push_back(successor);
 	            		openList.erase(openList.begin(),openList.end());
@@ -250,7 +285,7 @@ int a_star(Node *start, Node *destination)
 		            	Node app= *it;	 
 		            	if((app.g+app.h)>(successor.g+successor.h))
 		            	{
-		           		#pragma omp critical
+		           		#pragma omp critical (openList)
 	            			{
 				    		openList.erase(it); // debugger
 				    		
@@ -272,14 +307,14 @@ int a_star(Node *start, Node *destination)
 		            	Node app= *it;	 
 		            	if((app.g+app.h)>(successor.g+successor.h))
 		            	{
-		            		#pragma omp critical
+		            		#pragma omp critical (notInList)
 	            			{
 		            			closedList.erase(it); //debugger
 		            		
 		            			successor.Prow=successor.Nrow-dy[pind];
 		            			successor.Pcol=successor.Ncol-dx[pind];
 		            			closedList.push_back(successor);
-					}
+							}
 				}
 			    }
 			    else
@@ -289,7 +324,7 @@ int a_star(Node *start, Node *destination)
 					successor.Pcol=current.Ncol;
 		            	
 		            //	closedList.insert(successor);
-		            		#pragma omp critical
+		            		#pragma omp critical (inserimento)
 		            		openList.insert(successor);
 				}
 			}
@@ -330,43 +365,88 @@ void printmatrix2()
 	
 }
 
-int main()
+/* Inputs from command line:
+	-argv[1] number of thread that you want to use 0 < n <=8
+	-argv[2] row of start Node
+	-argv[3] column of start Node
+	-argv[4] row of destination Node
+	-argv[5] column of destination Node
+	-argv[6] number of rows in your grid
+	-argv[7] number of columns in your grid
+	-argv[8] t: if you want to generate a new matrix or f: if you want to read it from file named "Matrix.txt"
+*/
+int main(int argc, char * argv[])
 {
-//	generateMATRIX();
+	//generateMATRIX();
 //	printmatrix();
-	generateMATRIX();
-
-	Node start;
-	Node dest;
-	cout<<"Ncol: " <<COL<<"\n";
-	start.Nrow=0;
-	start.Ncol=3;
-	startTime=omp_get_wtime();
-	printmatrix2();
-	
-	if(isValid(start.Nrow,start.Ncol)==false)
+	//generatematrix();
+//	set_new_handler(no_memory);
+	if (argc >= 8) 
 	{
-		cout <<"Invalid start";
+        if ((atoi(argv[1]) <= 0)||(atoi(argv[1])>NUM_MAX_THREAD))
+		{
+            cout<<"Not a valid number for threads.Please set a value between o and " << NUM_MAX_THREAD <<"\n";
+            return 5;
+        }
+        //if number of threads is valid then set the parallel regions threads.
+        
+        omp_set_dynamic(0); // Explicitly disable dynamic teams
+    	omp_set_num_threads(8); // Use N threads for all parallel regions
+    	
+		// set start and destination node: 
+		Node start;
+		Node dest;
+	
+		//start.Nrow=0;
+		//start.Ncol=2; //7 for 5000x5000 matrix 6  for 3000x3000 2, 2 for 1000x1000
+	
+		if(isValid(atoi(argv[2]),atoi(argv[3]))==false)
+		{
+			cout <<"Invalid start";
+			return 5;
+		}
+		start.Nrow= atoi(argv[2]);
+		start.Ncol= atoi(argv[3]);
+		
+		//Destination: 
+	
+		//4999 for 5000x5000 matrix 2440  then 2999, 999 for 1000x1000, 1999 for 2000x2000
+		//4998 for 5000x5000 matrix 2445 then 2999, 998 for 1000x1000,1999 for 2000x2000
+	
+		//cout<< "\ndestinazione : " << dest.Nrow <<" " <<dest.Ncol<<"\n"; 
+		if(isValid(atoi(argv[4]),atoi(argv[5]))==false)
+		{
+			cout <<"Invalid destination";
+			return 5;
+		}
+		dest.Nrow= atoi(argv[4]);
+		dest.Ncol= atoi(argv[5]);
+		//Number of rows in the grid :
+		if((atoi(argv[6])<=0)&&(atoi(argv[7])<=0))
+		{
+			cout<<"Rows and columns numbers not valid!\n";
+			return 5;
+		}
+		ROW=atoi(argv[6]);
+		COL=atoi(argv[7]);
+		matrix= (int*) calloc(ROW*COL,sizeof(int));
+		printmatrix2();
+		//read matrix choice
+		if(argv[8]=="f")
+		{
+			readPath("Matrix.txt");
+		}
+		else
+		{
+			generateMatrix(ROW,COL);
+			writeFile(ROW,COL);
+			readPath("Matrix.txt");
+		}
+		
+		a_star(&start,&dest);
+		free(matrix);
+	//	cout<<"stampa: " << endTime-startTime <<"\n";
 		return 0;
+	
 	}
-	
-	
-
-	//Node dest;
-	generateDest();
-	dest.Nrow=destR; 
-	dest.Ncol=destC;
-
-	
-
-	cout<< "\nscelta: " << matrix[dest.Nrow*ROW+dest.Ncol]; 
-	if(isValid(dest.Nrow,dest.Ncol)==false)
-	{
-		cout <<"Invalid destination";
-		return 0;
-	}
-	a_star(&start,&dest);
-	cout<<"stampa: " << endTime-startTime <<"\n";
-	return 0;
-	
 }
