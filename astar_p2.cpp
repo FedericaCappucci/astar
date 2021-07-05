@@ -380,7 +380,7 @@ int main(int argc, char * argv[])
 	//generateMATRIX();
 //	printmatrix();
 	//generatematrix();
-	set_new_handler(no_memory);
+	//set_new_handler(no_memory);
 	if (argc >= 8) 
 	{
 		if ((atoi(argv[8]) <= 0)||(atoi(argv[8])>NUM_MAX_THREAD))
