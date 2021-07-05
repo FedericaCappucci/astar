@@ -298,6 +298,10 @@ void a_star(Node *start, Node *destination)
     	t=neighbours1[sub];
     	t.g=1;
     	t.h=heuristic(&neighbours1[sub],destination);
+    	
+	// COPIA QUESTE DUE RIGHE NEL CODICE!!!!!!
+	t.Prow=start->Nrow;
+    	t.Pcol=start->Ncol;
     	//Node t1;
     	
     	new_starts[sub] = t; 	
@@ -375,7 +379,7 @@ void a_star(Node *start, Node *destination)
 									//save the information about thread that found the path and about cost
 									int nThread = omp_get_thread_num();
 									double cost=neighbours1[pind].g;
-									//printPath(*closedList,*start);
+									printPath(*closedList,*start);
 									path_array[neg].cost=cost;
 									path_array[neg].numThread=nThread;
 									
@@ -543,7 +547,7 @@ int main(int argc, char * argv[])
 //	printmatrix();
 	//generatematrix();
 	set_new_handler(no_memory);
-	if (argc >= 8) 
+	/*if (argc >= 8) 
 	{
 		if ((atoi(argv[8]) <= 0)||(atoi(argv[8])>NUM_MAX_THREAD))
 			{
@@ -623,5 +627,25 @@ int main(int argc, char * argv[])
 	{
 		cout<<"Wrong number of paramters!They must be: \n 1.Grid rows \n 2. Grid columns\n 3.t or f to generate grid or not \n 4.Node start row \n 5.Node start column \n 6.Node destination row\n 7.Node destination column\n 8.Number of threads\n";
 				return 0;
-	}
+	}*/
+	ROW=50;
+	COL=50;
+	matrix= (int*) calloc(ROW*COL,sizeof(int));
+	generateMatrix(ROW,COL);
+	writeFile(ROW,COL);
+	cout << "Grid generated!\n";
+	readPath("Matrix.txt");
+	
+	Node start;
+	Node dest;
+	
+	start.Nrow= 0;
+	start.Ncol= 0;
+	
+	dest.Nrow= 49;
+	dest.Ncol= 49;
+	omp_set_dynamic(0); // Explicitly disable dynamic teams
+	omp_set_num_threads(1);
+	
+	a_star(&start,&dest);
 }
