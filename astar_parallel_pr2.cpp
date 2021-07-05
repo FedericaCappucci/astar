@@ -92,28 +92,19 @@ int Search(Node& toSearch, set<Node> l)
 	
 	int i=0;
 	int find=-1;
-	//#pragma omp parallel
-	//{
-		/*cout<<"Thread: " << omp_get_thread_num(); ;
-		cout<<"\n";*/
-			
 		for(it=l.begin();it!=l.end();++it)
 		{	
-			//#pragma omp task
-			//{
 				Node c = *it;	
 				if((c.Ncol==toSearch.Ncol)&&(c.Nrow==toSearch.Nrow))
 				{
 					find=i;
 				}
 				i++;
-			//}
 		}
-	//}
-	//double end=omp_get_wtime();
-	//cout<<"ricerca: " << end-startTime <<"\n";
 	return find;
 }
+
+// given a current node, this function fills an array made of its valid neighbours(valid in the sense they are not obstacles)
 Node * setNeighbours(Node current, int *c)
 {
 	//struct Node* neighbours;
@@ -154,7 +145,6 @@ int Search(Node& toSearch, list<Node> l)
 	list<Node>::iterator it;
 	
 	int i=0;
-	//task
 	for(it=l.begin();it!=l.end();++it)
 	{	
 		Node c = *it;	
@@ -187,7 +177,7 @@ bool isDestination(Node succ,Node dest)
 		return false; 
 } 
 
-//euclidean distance
+// computes euclidean distance
 double heuristic(Node* current_cell,Node *goal)
 {
 
@@ -197,6 +187,8 @@ double heuristic(Node* current_cell,Node *goal)
 	//double i=abs(current_cell->Nrow-goal->Nrow)+abs(current_cell->Ncol-goal->Ncol);
 	return i;
 }
+
+//Prints the path between the start node and destination node
 void printPath(list<Node> closedList,Node start)
 {
 	//list<Node>::iterator it;
@@ -217,9 +209,6 @@ void printPath(list<Node> closedList,Node start)
 	Node c=closedList.back();;
 	
 	list<Node>::iterator i;
-	//#pragma omp parallel
-	//{
-	// task ??
 	for(i=closedList.end();i!=closedList.begin();--i)
 	{
 		
@@ -228,8 +217,6 @@ void printPath(list<Node> closedList,Node start)
 		{
 			break;
 		}
-		//#pragma omp task
-		//{
 		Node a;
 		a.Ncol=c.Pcol;
 		a.Nrow=c.Prow;
@@ -239,15 +226,7 @@ void printPath(list<Node> closedList,Node start)
 		beg=closedList.begin();
 		advance(beg,pos);
 		c=*beg;		
-	//}
-	
 	}
-	//}
-	//double end=omp_get_wtime();
-	//cout<<"stampa: " << end-startTime <<"\n";
-	
-//	endTime=omp_get_wtime();
-        //cout<< "\n\n time: " << endTime-startTime<<"\n";
 }
 
 void swap(Path * array, int l, int r) {
@@ -290,7 +269,7 @@ void a_star(Node *start, Node *destination)
     
     
     
-    neighbours1 = setNeighbours((Node)(*start), &counterNeg);
+    neighbours1 = setNeighbours((Node)(*start), &counterNeg); //sets an array of neighbours of the start node
 	cout <<"vicini : " << counterNeg;
     for (int sub=0; sub<counterNeg; sub++)
     {
@@ -298,8 +277,7 @@ void a_star(Node *start, Node *destination)
     	t=neighbours1[sub];
     	t.g=1;
     	t.h=heuristic(&neighbours1[sub],destination);
-    	
-	// COPIA QUESTE DUE RIGHE NEL CODICE!!!!!!
+    
 	t.Prow=start->Nrow;
     	t.Pcol=start->Ncol;
     	//Node t1;
@@ -315,15 +293,14 @@ void a_star(Node *start, Node *destination)
     //int c= *(neighbours1+0)->Ncol; 
    
     
-    //initizializate start
+    //initialize start
     start->g=0.0;
     start->h=heuristic(start,destination);
     
-  // cout <<"dest" <<destination->Ncol;
+    //if the number of neighbours of the start node is different from 0 we explore a number of paths equal to the number of neighbours
     if(counterNeg!=0)
     { 	
     	cout<<"Start\n";
-    	//cout<<"vicini: " <<counterNeg <<"\n";
 		Path path_array[counterNeg];
     	double beg = omp_get_wtime();
 		#pragma omp parallel
@@ -360,7 +337,7 @@ void a_star(Node *start, Node *destination)
 							closedList->push_back(current);
 			    
 			        		neighbours1= setNeighbours(current,&counterNeg);
-							for(int pind = 0; pind<counterNeg; pind++) //8 position possible 
+							for(int pind = 0; pind<counterNeg; pind++) //8 possible positions
 							{
 								
 							    neighbours1[pind].g=current.g+1;
@@ -452,7 +429,7 @@ void a_star(Node *start, Node *destination)
 			
 					    }
 					    
-					    // if path found(there could be walls between starting node and destination
+					    // if path found(there could be walls between starting node and destination)
 					   if(found!=true)
 						{
 							
@@ -485,9 +462,10 @@ void a_star(Node *start, Node *destination)
   
 
 }
+
+//Prints grid containing the nodes
 void printmatrix2()
 {
-	//#pragma omp parallel for schedule(dynamic)
 	for(int i=0;i<ROW;i++)
 	{
 	       for(int c=0;c<COL;c++)
@@ -498,10 +476,10 @@ void printmatrix2()
 	       
 	   cout<<"\n";  
 	}
-	cout<<"\n";
-	//endTime=omp_get_wtime();
-	
+	cout<<"\n";	
 }
+
+//Used to read the file "Matrix.txt" to build the matrix
 void readPath(string nomeFile)
 {
 	char c;
