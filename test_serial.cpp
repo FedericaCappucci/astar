@@ -23,7 +23,7 @@ int *matrix;
 
 
 /* Contains all the information about the element of the matrix:
-	-Nrow,Ncol are int values that rappresent the number of coloumn and row of each Node
+	-Nrow,Ncol are int values that rappresent the number of column and row of each Node
 	- g is the cost to move from the source node to a given node
 	-h is heuristic function computed by "Euclide" method 
 	-Prow,Pcol are int values that represents the column and the row of the previous node (The one that generates the current one)
@@ -112,7 +112,7 @@ int Search(Node& toSearch, set<Node> l)
 		-Node toSearch: the starting node to find neighbours
 		-list<Node> l: the list from which search
 	OUTPUT:
-		-int i: displacement of the found element in the set
+		-int i: displacement of the found element in the list
 */
 int Search(Node& toSearch, list<Node> l)
 {
@@ -168,9 +168,15 @@ Node * setNeighbours(Node current, int *c)
 	return neighbours_array;	
 }
 
-
-// A Utility Function to check whether given cell (row, col)
-// is a valid cell or not.
+/*
+	isValid: an utility function to check whether given cell (row, col) is a valid cell or not.
+	INPUTS:
+		-int row: row number to check
+		-int col: col number to check
+	OUTPUTS:
+		- true if the node is valid
+		- false if is not.
+*/
 bool isValid(int row, int col)
 {
     // Returns true if row number and column number
@@ -179,7 +185,15 @@ bool isValid(int row, int col)
            && (col < COL)) &&(matrix[row*ROW+col]!=0); //if matrix[][] =0 the is an obstacle
 }
 
-//check if a node is the destination node
+/*
+	isDestination check if the given node is equal to the destination (in terms of row and col number).
+	INPUTS: 
+		-Node succ: the node to check
+		-Node dest: the destination 
+	OUTPUT:
+		-true if the succ col and row are equal to the destination col and row
+		-false if not.
+*/
 bool isDestination(Node succ,Node dest) 
 { 
 	if (succ.Ncol == dest.Ncol && succ.Nrow == dest.Nrow) 
@@ -187,8 +201,14 @@ bool isDestination(Node succ,Node dest)
 	else
 		return false; 
 } 
-
-// computes euclidean distance
+/*
+	heuristic: compute the heuristic function with Euclidean formula given the node we are visiting node and the fixed destination.
+	INPUTS: 
+		-Node* current_cell: pointer to the node from where we want to compute heuristic
+		-Node* goal: pointer to the final node we want to reach
+	OUTPUT:
+		-double i: result value of heuristic function
+*/
 double heuristic(Node* current_cell,Node *goal)
 {
 
@@ -197,8 +217,13 @@ double heuristic(Node* current_cell,Node *goal)
 	//double i=abs(current_cell->Nrow-goal->Nrow)+abs(current_cell->Ncol-goal->Ncol);
 	return i;
 }
-
-//Prints the path between the start node and destination node
+/*
+	printPath: prints on screen the path found between the start node and destination node.
+	in order to print the path, it searches in the ClosedList starting from the last element on the list and proceding badckwords printing the parent node until it reaches the start.
+	INPUTS: 
+		-list<Node> closedList: list which contains all the visited Nodes
+		-Node start: initial node.
+*/
 void printPath(list<Node> closedList,Node start)
 {
 	Node c=closedList.back();;
@@ -224,14 +249,18 @@ void printPath(list<Node> closedList,Node start)
 	}
 }
 
-
+/*
+	a_star: compute astar alghorithm by calling all the auxiliary functions
+	INPUTS: 
+		-Node *start: pointer to the initial node from where we want to start to search
+		-Node *destination: Node that we want to reach.
+*/
 void a_star(Node *start, Node *destination)
 {
     Node * neighbours1= new Node[8];
     Node * new_starts = new Node[8];
-    double beg=0;
-    double end=0;
-    int counterNeg=0; //count the neighbours which are valid
+    
+	int counterNeg=0; //count the neighbours which are valid
 
     //initialize start
     start->g=0.0;
@@ -334,8 +363,10 @@ void a_star(Node *start, Node *destination)
 
 }
 
-//Prints grid containing the nodes
-void printmatrix2()
+/*
+	printmatrix: prints on screen the read or generated grid.
+*/
+void printmatrix()
 {
 	for(int i=0;i<ROW;i++)
 	{
@@ -349,20 +380,27 @@ void printmatrix2()
 	}
 	cout<<"\n";	
 }
-
-//Used to read the file "Matrix.txt" to build the matrix
-void readPath(string nomeFile)
+/*
+	readPath: used to read a file containing the grid to fill the matrix
+	INPUTS: 
+		-String fileName: the name of file to read, in this case it will be "Matrix.txt"
+	OUTPUT:
+		-int matrix [ROW][COL]: it is a global variable so it is just filled, doesn't need return value.	
+*/
+void readPath(string fileName)
 {
 	char c;
 	int num;
 	int i=0;
 	int j=0;
-	ifstream fin(nomeFile);
+	ifstream fin(fileName);
+	//add file not exist error
 	
 	while(fin.get(c))
 	{
 		if(c != '\n')
 		{
+			//to cast from char to number
 			num= (int) c-48;
 			matrix[i*ROW + j] = num;
 			j++;
