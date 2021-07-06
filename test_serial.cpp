@@ -7,24 +7,38 @@
 #include "matrix.cpp"
 #include <omp.h>
 #include <new>
-#define N_DIRECTION 8
-
-using namespace std;
 
 const int NUM_MAX_THREAD=8;
 
+
+using namespace std;
+
+
+double startTime;
+double endTime;
 int ROW;
 int COL;
 //This will contain the grid read from the file "Matrix.txt"
 int *matrix;
 
+
+/* Contains all the information about the element of the matrix:
+	-Nrow,Ncol are int values that rappresent the number of coloumn and row of each Node
+	- g is the cost to move from the source node to a given node
+	-h is heuristic function computed by "Euclide" method 
+	-Prow,Pcol are int values that represents the column and the row of the previous node (The one that generates the current one)
+	
+	Note that: the cost function f is not defined because the information was reduntant as it can be easly obtained by the sum of g and h.
+*/
 struct Node
 {
     int Nrow,Ncol;
     double g,h;
     int Prow,Pcol;
-    bool isObstacle = false;
+    
+
     public:
+    //This is needed to compare 2 nodes using their cost function f
 	    bool operator<(const Node& other )const
 	    {
 	    	if((Ncol==other.Ncol)&&(Nrow==other.Nrow))
@@ -43,48 +57,47 @@ struct Node
 				}
 			}
 	    }
+	    //needed to free the memory after the path is found
+	    static void operator delete(void* ptr, std::size_t sz)
+    	    {
+        		//cout << "custom delete for size " << sz <<endl;
+        		delete (ptr); // ::operator delete(ptr) can also be used
+    	    }
+	
 	   
 };
-typedef struct path
-{
-	double cost;
-	int numThread;
-	
-} Path;
+/* 
+ This struct will contain:
+	-The number of thread that have founded the path
+	-the cost of the path founded if there is one.
+*/
 
+// This function will be called when the memory is not enough to allocate dynamically space (usefull only with "new" operator)
 void no_memory()
 {
 	cout<<"not enough memory";
 	exit (1);
 }
+
+//finds the position of the node in a given set
 int Search(Node& toSearch, set<Node> l)
 {
 	set<Node>::iterator it;
 	
 	int i=0;
-	int find=-1;
-	//#pragma omp parallel
-	//{
-		/*cout<<"Thread: " << omp_get_thread_num(); ;
-		cout<<"\n";*/
-			
-		for(it=l.begin();it!=l.end();++it)
-		{	
-			//#pragma omp task
-			//{
-				Node c = *it;	
-				if((c.Ncol==toSearch.Ncol)&&(c.Nrow==toSearch.Nrow))
-				{
-					find=i;
-				}
-				i++;
-			//}
+	for(it=l.begin();it!=l.end();++it)
+	{	
+		Node c = *it;	
+		if((c.Ncol==toSearch.Ncol)&&(c.Nrow==toSearch.Nrow))
+		{
+			return i;
 		}
-	//}
-	//double end=omp_get_wtime();
-	//cout<<"ricerca: " << end-startTime <<"\n";
-	return find;
+		i++;
+	}
+	return -1;
 }
+
+// given a current node, this function fills an array made of its valid neighbours(valid in the sense they are not obstacles)
 Node * setNeighbours(Node current, int *c)
 {
 	//struct Node* neighbours;
@@ -118,12 +131,13 @@ Node * setNeighbours(Node current, int *c)
 	//array_neigh = neighbours_array;
 	return neighbours_array;	
 }
+
+//finds the position of a node in a list
 int Search(Node& toSearch, list<Node> l)
 {
 	list<Node>::iterator it;
 	
 	int i=0;
-	//task
 	for(it=l.begin();it!=l.end();++it)
 	{	
 		Node c = *it;	
@@ -145,6 +159,8 @@ bool isValid(int row, int col)
     return ((row >= 0) && (row < ROW) && (col >= 0)
            && (col < COL)) &&(matrix[row*ROW+col]!=0); //if matrix[][] =0 the is an obstacle
 }
+
+//check if a node is the destination node
 bool isDestination(Node succ,Node dest) 
 { 
 	if (succ.Ncol == dest.Ncol && succ.Nrow == dest.Nrow) 
@@ -153,39 +169,22 @@ bool isDestination(Node succ,Node dest)
 		return false; 
 } 
 
-//euclide
+// computes euclidean distance
 double heuristic(Node* current_cell,Node *goal)
 {
 
-    
-	//double i=sqrt((goal->Nrow-current_cell->Nrow)*(goal->Nrow-current_cell->Nrow)+(goal->Ncol-current_cell->Ncol)*(goal->Ncol-current_cell->Ncol));
+	double i=sqrt((goal->Nrow-current_cell->Nrow)*(goal->Nrow-current_cell->Nrow)+(goal->Ncol-current_cell->Ncol)*(goal->Ncol-current_cell->Ncol));
 	//manhattan 
-	double i=abs(current_cell->Nrow-goal->Nrow)+abs(current_cell->Ncol-goal->Ncol);
+	//double i=abs(current_cell->Nrow-goal->Nrow)+abs(current_cell->Ncol-goal->Ncol);
 	return i;
 }
+
+//Prints the path between the start node and destination node
 void printPath(list<Node> closedList,Node start)
 {
-	//list<Node>::iterator it;
-/*	int cont=0;
-	for(it=closedList.begin();it!=closedList.end();++it)
-	{
-		Node c;
-		Node prev;
-		
-		c = *it;	
-		cout << "(" << c.Nrow << "," << c.Ncol <<") ;"<< "(" << c.Prow << "," << c.Pcol <<") ->";
-		
-	
-		
-	}*/
-
-	
 	Node c=closedList.back();;
 	
 	list<Node>::iterator i;
-	//#pragma omp parallel
-	//{
-	// task ??
 	for(i=closedList.end();i!=closedList.begin();--i)
 	{
 		
@@ -194,8 +193,6 @@ void printPath(list<Node> closedList,Node start)
 		{
 			break;
 		}
-		//#pragma omp task
-		//{
 		Node a;
 		a.Ncol=c.Pcol;
 		a.Nrow=c.Prow;
@@ -205,138 +202,122 @@ void printPath(list<Node> closedList,Node start)
 		beg=closedList.begin();
 		advance(beg,pos);
 		c=*beg;		
-	//}
-	
 	}
-	//}
-	//double end=omp_get_wtime();
-	//cout<<"stampa: " << end-startTime <<"\n";
-	
-//	endTime=omp_get_wtime();
-        //cout<< "\n\n time: " << endTime-startTime<<"\n";
 }
 
-int a_star(Node *start, Node *destination)
+
+void a_star(Node *start, Node *destination)
 {
     Node * neighbours1= new Node[8];
+    Node * new_starts = new Node[8];
     double beg=0;
     double end=0;
     int counterNeg=0; //count the neighbours which are valid
-    
-    
-    neighbours1 = setNeighbours((Node)(*start), &counterNeg);
-    //int c= *(neighbours1+0)->Ncol; 
-   
-    
-    //initizializate start
+
+    //initialize start
     start->g=0.0;
     start->h=heuristic(start,destination);
-    
-  // cout <<"dest" <<destination->Ncol;
-    
-	
-		    			
-	set<Node> openList;
-	list<Node> *closedList=new list<Node>[ROW*COL];
-	bool found = false;
-				    	
-	openList.insert(*start);
-						
-	list<Node>::iterator it=closedList->begin();
+    cout<<"Start\n";
 
+    			
+    					
+	set<Node> openList;
+	list<Node> *closedList=new list<Node>;
+	bool found = false;
+
+	openList.insert(*start);
+	//closedList->push_back(*start);
+	list<Node>::iterator it=closedList->begin();				
 	while(!openList.empty()) 
-	{
-	    	
-		Node current = *openList.begin();
-		openList.erase(openList.begin());
-		closedList->push_back(current);
-		//find near nodes of my current one 
-		neighbours1= setNeighbours(current,&counterNeg);
-		for(int pind = 0; pind<counterNeg; pind++) //8 position possible 
 		{
-				neighbours1[pind].g=current.g+1;
-				//not sure it will work
-				neighbours1[pind].h=heuristic(&neighbours1[pind],destination);
-				Node successor= neighbours1[pind];
-			 
-				            	cout<<"nodo successor"<<neighbours1[pind].Ncol<<" " <<neighbours1[pind].Nrow<<"\n";
-								if(isDestination(neighbours1[pind],*destination))
-								{
-									cout<<"arrivo\n";
-									neighbours1[pind].Prow=current.Nrow;
-									neighbours1[pind].Pcol=current.Ncol;
-									closedList->push_back(neighbours1[pind]);
-									openList.erase(openList.begin(),openList.end());
-									int nThread = omp_get_thread_num();
-									double cost=neighbours1[pind].h+neighbours1[pind].g;
-									printPath(*closedList,*start);
-									return 0;
-									
-									
-									
-								}
-								else
-								{
-									int disp=Search(neighbours1[pind],openList);
-									if(disp!=-1) //node is already in OpenList. This function return the displacement for the iterator
-									{
-										
-					            	
-										
-										disp=Search(neighbours1[pind],openList);
+			if(found) break;
+			    	
+			Node current = *openList.begin();
+			openList.erase(openList.begin());
+			closedList->push_back(current);
+			    
+			neighbours1= setNeighbours(current,&counterNeg);
+			for(int pind = 0; pind<counterNeg; pind++) //8 possible positions
+				{
+								
+					neighbours1[pind].g=current.g+1;
+					neighbours1[pind].h=heuristic(&neighbours1[pind],destination);
+							
+					if(isDestination(neighbours1[pind],*destination))
+						{
+							cout<<"arrivo\n";
+							neighbours1[pind].Prow=current.Nrow;
+							neighbours1[pind].Pcol=current.Ncol;
+							closedList->push_back(neighbours1[pind]);
+							openList.erase(openList.begin(),openList.end());
+							
+							printPath(*closedList,*start);	
+							//FREE memory 
+							delete closedList;
+							delete neighbours1;
+							//exit condition 
+							found=true;
+					
+						}
+						else
+						{
+							int disp=Search(neighbours1[pind],openList);
+							if(disp!=-1) //node is already in OpenList. This function return the displacement for the iterator
+							{
+									//int disp=0;
+					           	
+									//startTime=omp_get_wtime();
+										//disp=Search(neighbours1[pind],openList);
 										//cout<<"trovato in openList\n";
-										set<Node>::iterator it=openList.begin(); 
-										advance(it,disp);
-										Node app= *it;	 
-										if((app.g+app.h)>(neighbours1[pind].g+neighbours1[pind].h))
-										{
-											openList.erase(it); 
-					            			
-					            			neighbours1[pind].Prow=current.Nrow;
-											neighbours1[pind].Pcol=current.Ncol;
-											
-											openList.insert(neighbours1[pind]);
-										}
-									}
-									disp=Search(neighbours1[pind],*closedList);	
-									if(disp!=-1) //node is already in ClosedList. This function return the displacement for the iterator
-					            		{
-					            			int disp=0;
-					            			disp=Search(neighbours1[pind],*closedList);
-					            	
-											
-											list<Node>::iterator it=closedList->begin(); 
-											advance(it,disp);
-											Node app= *it;	 
-										
-											if((app.g+app.h)>(neighbours1[pind].g+neighbours1[pind].h))
-											{
-												closedList->erase(it);
-												neighbours1[pind].Prow=current.Nrow;
-												neighbours1[pind].Pcol=current.Ncol;
-												closedList->push_back(neighbours1[pind]);
-											}
-										}
-									else
+									set<Node>::iterator it=openList.begin(); 
+									advance(it,disp);
+									Node app= *it;	 
+									if((app.g+app.h)>(neighbours1[pind].g+neighbours1[pind].h))
 									{
-										neighbours1[pind].Prow=current.Nrow;
+										openList.erase(it); // debugger
+					            			
+					            		neighbours1[pind].Prow=current.Nrow;
 										neighbours1[pind].Pcol=current.Ncol;
+										
 										openList.insert(neighbours1[pind]);
 									}
 								}
-		} 		
-	}
-					  
-						cout<<"can't reach the destination";
-
+								disp=Search(neighbours1[pind],*closedList);
+								if(disp!=-1) //node is already in ClosedList. This function return the displacement for the iterator
+					           	{
+									list<Node>::iterator it=closedList->begin(); 
+									advance(it,disp);
+									Node app= *it;	 
+									if((app.g+app.h)>(neighbours1[pind].g+neighbours1[pind].h))
+									{
+										closedList->erase(it); //debugger
 					
+												neighbours1[pind].Prow=current.Nrow;
+												neighbours1[pind].Pcol=current.Ncol;
+												closedList->push_back(neighbours1[pind]);
+									}
+										
+								}
+								else
+								{
+									neighbours1[pind].Prow=current.Nrow;
+									neighbours1[pind].Pcol=current.Ncol;
+					            	
+										//	closedList.insert(successor);
+									openList.insert(neighbours1[pind]);	
+								}
+							}
+				}
+			
+			}
 
-   return 0;
+  
 
 }
-void printmatrix()
+
+//Prints grid containing the nodes
+void printmatrix2()
 {
-	
 	for(int i=0;i<ROW;i++)
 	{
 	       for(int c=0;c<COL;c++)
@@ -347,10 +328,10 @@ void printmatrix()
 	       
 	   cout<<"\n";  
 	}
-	cout<<"\n";
-	//endTime=omp_get_wtime();
-	
+	cout<<"\n";	
 }
+
+//Used to read the file "Matrix.txt" to build the matrix
 void readPath(string nomeFile)
 {
 	char c;
@@ -374,10 +355,12 @@ void readPath(string nomeFile)
 		}
 		
 		
+		
 	}
 	fin.close();
 	
 }
+
 /* Inputs from command line:
 	-argv[1] number of rows in your grid
 	-argv[2] number of columns in your grid
@@ -475,14 +458,13 @@ int main(int argc, char * argv[])
 		cout<<"Wrong number of paramters!They must be: \n 1.Grid rows \n 2. Grid columns\n 3.t or f to generate grid or not \n 4.Node start row \n 5.Node start column \n 6.Node destination row\n 7.Node destination column\n 8.Number of threads\n";
 				return 0;
 	}*/
-	ROW=250;
-	COL=250;
+	ROW=300;
+	COL=300;
 	matrix= (int*) calloc(ROW*COL,sizeof(int));
 	generateMatrix(ROW,COL);
 	writeFile(ROW,COL);
 	cout << "Grid generated!\n";
 	readPath("Matrix.txt");
-	//printmatrix();
 	
 	Node start;
 	Node dest;
@@ -490,9 +472,9 @@ int main(int argc, char * argv[])
 	start.Nrow= 0;
 	start.Ncol= 0;
 	
-	dest.Nrow= 249;
-	dest.Ncol= 249;
-
-	a_star(&start,&dest);
+	dest.Nrow= 299;
+	dest.Ncol= 299;
 	
+	
+	a_star(&start,&dest);
 }
