@@ -375,7 +375,7 @@ void a_star(Node *start, Node *destination)
 				//FREE memory 
 				delete closedList;
 				delete neighbours1;
-				delete printList;
+				
 				openList.erase(openList.begin(),openList.end());
 				
 				//exit condition 
