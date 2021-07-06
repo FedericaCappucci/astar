@@ -8,14 +8,9 @@
 #include <omp.h>
 #include <new>
 
-const int NUM_MAX_THREAD=8;
-
-
 using namespace std;
 
-
-double startTime;
-double endTime;
+//number of rows and columns in the grid
 int ROW;
 int COL;
 //This will contain the grid read from the file "Matrix.txt"
@@ -49,7 +44,7 @@ struct Node
 			{
 				if((g+h)!=(other.g+other.h))
 				{
-					return 			  (g+h)<(other.g+other.h);			
+					return (g+h)<(other.g+other.h);			
 				}
 				else
 				{
@@ -59,10 +54,9 @@ struct Node
 	    }
 	    //needed to free the memory after the path is found
 	    static void operator delete(void* ptr, std::size_t sz)
-    	    {
-        		//cout << "custom delete for size " << sz <<endl;
-        		delete (ptr); // ::operator delete(ptr) can also be used
-    	    }
+    	{
+        	delete (ptr); // ::operator delete(ptr) can also be used
+    	}
 	
 	   
 };
@@ -257,110 +251,113 @@ void printPath(list<Node> closedList,Node start)
 */
 void a_star(Node *start, Node *destination)
 {
-    Node * neighbours1= new Node[8];
-    Node * new_starts = new Node[8];
-    
-	int counterNeg=0; //count the neighbours which are valid
+    Node * neighbours1= new Node[8]; //array of neighbours
+	int counterNeg=0; //will contain the number of neighbours which are valid
+	set<Node> openList; //set of nodes to visit
+	list<Node> *closedList=new list<Node>; //set of node already visited
+	bool found = false; //true if the destination is found
 
-    //initialize start
+    //initialize start costs
     start->g=0.0;
     start->h=heuristic(start,destination);
-    cout<<"Start\n";
-
-    			
-    					
-	set<Node> openList;
-	list<Node> *closedList=new list<Node>;
-	bool found = false;
-
+    
+	cout<<"Start\n";
+	
 	openList.insert(*start);
-	//closedList->push_back(*start);
-	list<Node>::iterator it=closedList->begin();				
+	
+	//list<Node>::iterator it=closedList->begin();
+	
+	//when the list is empty, if the destination is not found then the destination can't be reached.
 	while(!openList.empty()) 
+	{
+		if(found) break;
+		
+		//the first element of openList will be the one with lowest cost to reach the destination because elements in the set are ordered w.r.t cost 
+		  	
+		Node current = *openList.begin();
+		openList.erase(openList.begin());
+		//the node is visited so move it into closedList
+		closedList->push_back(current);
+	    
+		neighbours1= setNeighbours(current,&counterNeg); //find valid neighbours 
+		
+		//starting from current node check all its neighbours.  
+		for(int pind = 0; pind<counterNeg; pind++) 
 		{
-			if(found) break;
-			    	
-			Node current = *openList.begin();
-			openList.erase(openList.begin());
-			closedList->push_back(current);
-			    
-			neighbours1= setNeighbours(current,&counterNeg);
-			for(int pind = 0; pind<counterNeg; pind++) //8 possible positions
-				{
-								
-					neighbours1[pind].g=current.g+1;
-					neighbours1[pind].h=heuristic(&neighbours1[pind],destination);
-							
-					if(isDestination(neighbours1[pind],*destination))
-						{
-							cout<<"arrivo\n";
-							neighbours1[pind].Prow=current.Nrow;
-							neighbours1[pind].Pcol=current.Ncol;
-							closedList->push_back(neighbours1[pind]);
-							openList.erase(openList.begin(),openList.end());
-							
-							printPath(*closedList,*start);	
-							//FREE memory 
-							delete closedList;
-							delete neighbours1;
-							//exit condition 
-							found=true;
+			//set node costs		
+			neighbours1[pind].g=current.g+1;
+			neighbours1[pind].h=heuristic(&neighbours1[pind],destination);
 					
-						}
-						else
-						{
-							int disp=Search(neighbours1[pind],openList);
-							if(disp!=-1) //node is already in OpenList. This function return the displacement for the iterator
-							{
-									//int disp=0;
-					           	
-									//startTime=omp_get_wtime();
-										//disp=Search(neighbours1[pind],openList);
-										//cout<<"trovato in openList\n";
-									set<Node>::iterator it=openList.begin(); 
-									advance(it,disp);
-									Node app= *it;	 
-									if((app.g+app.h)>(neighbours1[pind].g+neighbours1[pind].h))
-									{
-										openList.erase(it); // debugger
-					            			
-					            		neighbours1[pind].Prow=current.Nrow;
-										neighbours1[pind].Pcol=current.Ncol;
-										
-										openList.insert(neighbours1[pind]);
-									}
-								}
-								disp=Search(neighbours1[pind],*closedList);
-								if(disp!=-1) //node is already in ClosedList. This function return the displacement for the iterator
-					           	{
-									list<Node>::iterator it=closedList->begin(); 
-									advance(it,disp);
-									Node app= *it;	 
-									if((app.g+app.h)>(neighbours1[pind].g+neighbours1[pind].h))
-									{
-										closedList->erase(it); //debugger
-					
-												neighbours1[pind].Prow=current.Nrow;
-												neighbours1[pind].Pcol=current.Ncol;
-												closedList->push_back(neighbours1[pind]);
-									}
-										
-								}
-								else
-								{
-									neighbours1[pind].Prow=current.Nrow;
-									neighbours1[pind].Pcol=current.Ncol;
-					            	
-										//	closedList.insert(successor);
-									openList.insert(neighbours1[pind]);	
-								}
-							}
-				}
-			
+			if(isDestination(neighbours1[pind],*destination))
+			{
+				cout<<"DESTINATION REACHED!\n";
+				//set destination parent node
+				neighbours1[pind].Prow=current.Nrow;
+				neighbours1[pind].Pcol=current.Ncol;
+				
+				closedList->push_back(neighbours1[pind]);
+				printPath(*closedList,*start);	
+				//FREE memory 
+				delete closedList;
+				delete neighbours1;
+				openList.erase(openList.begin(),openList.end());
+				
+				//exit condition 
+				found=true;
 			}
+			else
+			{
+				int disp=Search(neighbours1[pind],openList);
+				if(disp!=-1) //Node is already in openList
+				{
+					set<Node>::iterator it=openList.begin(); 
+					advance(it,disp);
+					Node app= *it;
+					//check if the cost of the processing node (neighbours1[pind]) is less than the one altready in the list.
+					//if it is then substituite it.
+					if((app.g+app.h)>(neighbours1[pind].g+neighbours1[pind].h))
+					{
+						openList.erase(it);
+			          			
+			          	neighbours1[pind].Prow=current.Nrow;
+						neighbours1[pind].Pcol=current.Ncol;
+						
+						openList.insert(neighbours1[pind]);
+					}
+				}
+				disp=Search(neighbours1[pind],*closedList);
+				if(disp!=-1) // if node is already in ClosedList.
+			       {
+					list<Node>::iterator it=closedList->begin(); 
+					advance(it,disp);
+					Node app= *it;
+					//check if the cost of the processing node (neighbours1[pind]) is less than the one altready in the list.
+					//if it is then substituite it.						
+					if((app.g+app.h)>(neighbours1[pind].g+neighbours1[pind].h))
+					{
+						closedList->erase(it);
+					
+						neighbours1[pind].Prow=current.Nrow;
+						neighbours1[pind].Pcol=current.Ncol;
+						closedList->push_back(neighbours1[pind]);
+						
+					}	
+				}
+				else
+				{
+					//if the node isn't already visited set the parent node as the one who generated this node and put it in the openList
+					neighbours1[pind].Prow=current.Nrow;
+					neighbours1[pind].Pcol=current.Ncol;
+					openList.insert(neighbours1[pind]);	
+				}
+				
+			}
+			//if destination found exit from for
+			if(found==true)
+				break;
+		}
 
-  
-
+	}
 }
 
 /*
