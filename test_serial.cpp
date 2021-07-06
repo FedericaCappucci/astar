@@ -475,8 +475,8 @@ int main(int argc, char * argv[])
 		cout<<"Wrong number of paramters!They must be: \n 1.Grid rows \n 2. Grid columns\n 3.t or f to generate grid or not \n 4.Node start row \n 5.Node start column \n 6.Node destination row\n 7.Node destination column\n 8.Number of threads\n";
 				return 0;
 	}*/
-	ROW=150;
-	COL=150;
+	ROW=250;
+	COL=250;
 	matrix= (int*) calloc(ROW*COL,sizeof(int));
 	generateMatrix(ROW,COL);
 	writeFile(ROW,COL);
@@ -490,8 +490,8 @@ int main(int argc, char * argv[])
 	start.Nrow= 0;
 	start.Ncol= 0;
 	
-	dest.Nrow= 149;
-	dest.Ncol= 149;
+	dest.Nrow= 249;
+	dest.Ncol= 249;
 
 	a_star(&start,&dest);
 	
