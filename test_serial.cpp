@@ -79,7 +79,16 @@ void no_memory()
 	exit (1);
 }
 
-//finds the position of the node in a given set
+/*
+	Overloaded function
+	Search find the only occurrance of a given node into a set.
+	Notice that a Node can be contained in the set just one time(no repetition allowed)
+	INPUTS: 
+		-Node toSearch: the starting node to find neighbours
+		-set<Node> l: the set from which search
+	OUTPUT:
+		-int i: displacement of the found element in the set
+*/
 int Search(Node& toSearch, set<Node> l)
 {
 	set<Node>::iterator it;
@@ -96,17 +105,44 @@ int Search(Node& toSearch, set<Node> l)
 	}
 	return -1;
 }
+/*
+	Overloaded function
+	Search find the first occurrance of a given node into a list.
+	INPUTS: 
+		-Node toSearch: the starting node to find neighbours
+		-list<Node> l: the list from which search
+	OUTPUT:
+		-int i: displacement of the found element in the set
+*/
+int Search(Node& toSearch, list<Node> l)
+{
+	list<Node>::iterator it;
+	
+	int i=0;
+	for(it=l.begin();it!=l.end();++it)
+	{	
+		Node c = *it;	
+		if((c.Ncol==toSearch.Ncol)&&(c.Nrow==toSearch.Nrow))
+		{
+			return i;
+		}
+		i++;
+	}
+	return -1;
+}
 
-// given a current node, this function fills an array made of its valid neighbours(valid in the sense they are not obstacles)
+/*
+	setNeighbours find all valid neighbours of a given node where valid means the neighbour is not a blocking node or out of grid range.
+	INPUTS: 
+		-Node current: the starting node to find neighbours
+		-int c: a int variable to store the number of found neighbour
+	OUTPUT:
+		-neighbours_array: array of nodes which contains the valid neighbours
+*/
 Node * setNeighbours(Node current, int *c)
 {
-	//struct Node* neighbours;
-    //Node * neighbours_array =(Node *) malloc(N_DIRECTION * sizeof(Node));
+
     Node * neighbours_array = new Node[8];
-    
-    
-    //Node neighbours_array[8];
-    //Node * neighbours = &neighbours_array;
 	int count=0;
 	int r= current.Nrow -1;
 	int col= current.Ncol -1;
@@ -132,23 +168,6 @@ Node * setNeighbours(Node current, int *c)
 	return neighbours_array;	
 }
 
-//finds the position of a node in a list
-int Search(Node& toSearch, list<Node> l)
-{
-	list<Node>::iterator it;
-	
-	int i=0;
-	for(it=l.begin();it!=l.end();++it)
-	{	
-		Node c = *it;	
-		if((c.Ncol==toSearch.Ncol)&&(c.Nrow==toSearch.Nrow))
-		{
-			return i;
-		}
-		i++;
-	}
-	return -1;
-}
 
 // A Utility Function to check whether given cell (row, col)
 // is a valid cell or not.
@@ -352,10 +371,7 @@ void readPath(string nomeFile)
 		{
 			i++;
 			j=0;
-		}
-		
-		
-		
+		}	
 	}
 	fin.close();
 	
@@ -369,28 +385,14 @@ void readPath(string nomeFile)
 	-argv[5] column of start Node 
 	-argv[6] row of destination Node
 	-argv[7] column of destination Node
-	-argv[8] number of thread that you want to use 0 < n <=8 
 */
 int main(int argc, char * argv[])
 {
-	//generateMATRIX();
-//	printmatrix();
-	//generatematrix();
 	set_new_handler(no_memory);
-	/*if (argc >= 8) 
+	if (argc >= 7) 
 	{
-		if ((atoi(argv[8]) <= 0)||(atoi(argv[8])>NUM_MAX_THREAD))
-			{
-		    	cout<<"Not a valid number for threads.Please set a value between o and " << NUM_MAX_THREAD <<"\n";
-		    	return 5;
-			}
-		
-		//if number of threads is valid then set the parallel regions threads.
-		omp_set_dynamic(0); // Explicitly disable dynamic teams
-	    	omp_set_num_threads(atoi(argv[8])); // Use N threads for all parallel regions
-	    	
-	    	//set column and row of your grid: (the one you read or the one you wanto to generate)
-	    	if((atoi(argv[1])<=0)&&(atoi(argv[2])<=0))
+	    //set column and row of your grid: (the one you read or the one you wanto to generate)
+	    if((atoi(argv[1])<=0)&&(atoi(argv[2])<=0))
 		{
 			cout<<"Rows and columns numbers not valid!\n";
 			return 5;
@@ -417,11 +419,8 @@ int main(int argc, char * argv[])
 		// set start and destination node: 
 		Node start;
 		Node dest;
-	
-		//start.Nrow=0;
-		//start.Ncol=2; //7 for 5000x5000 matrix 6  for 3000x3000 2, 2 for 1000x1000
 		
-		//checks if the start node is valid
+		//checks if the start node is valid ( valid means in range(ROW,COL) and is not a blocking element
 		if(isValid(atoi(argv[4]),atoi(argv[5]))==false)
 		{
 			cout <<"Invalid start";
@@ -430,13 +429,7 @@ int main(int argc, char * argv[])
 		start.Nrow= atoi(argv[4]);
 		start.Ncol= atoi(argv[5]);
 		
-		
 		//Destination: 
-	
-		//4999 for 5000x5000 matrix 2440  then 2999, 999 for 1000x1000, 1999 for 2000x2000
-		//4998 for 5000x5000 matrix 2445 then 2999, 998 for 1000x1000,1999 for 2000x2000
-	
-		//cout<< "\ndestinazione : " << dest.Nrow <<" " <<dest.Ncol<<"\n"; 
 		
 		//checks if the destination node is valid
 		if(isValid(atoi(argv[6]),atoi(argv[7]))==false)
@@ -449,32 +442,11 @@ int main(int argc, char * argv[])
 		
 		a_star(&start,&dest);
 		free(matrix);
-	//	cout<<"stampa: " << endTime-startTime <<"\n";
 		return 0;
-	
 	}
 	else
 	{
 		cout<<"Wrong number of paramters!They must be: \n 1.Grid rows \n 2. Grid columns\n 3.t or f to generate grid or not \n 4.Node start row \n 5.Node start column \n 6.Node destination row\n 7.Node destination column\n 8.Number of threads\n";
-				return 0;
-	}*/
-	ROW=500;
-	COL=500;
-	matrix= (int*) calloc(ROW*COL,sizeof(int));
-	generateMatrix(ROW,COL);
-	writeFile(ROW,COL);
-	cout << "Grid generated!\n";
-	readPath("Matrix.txt");
-	
-	Node start;
-	Node dest;
-	
-	start.Nrow= 0;
-	start.Ncol= 0;
-	
-	dest.Nrow= 499;
-	dest.Ncol= 499;
-	
-	
-	a_star(&start,&dest);
+		return 0;
+	}
 }
