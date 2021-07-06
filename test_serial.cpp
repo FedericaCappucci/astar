@@ -16,6 +16,8 @@ int COL;
 //This will contain the grid read from the file "Matrix.txt"
 int *matrix;
 
+list<Node> printList = new list<Node>; //this will contain the path to print( just for graphic not usefull for the algorithm)
+
 
 /* Contains all the information about the element of the matrix:
 	-Nrow,Ncol are int values that rappresent the number of column and row of each Node
@@ -227,6 +229,7 @@ void printPath(list<Node> closedList,Node start)
 	{
 		
 		cout << "(" << c.Nrow << "," << c.Ncol <<") ->";
+		toPrint.insert(c);
 		if((c.Nrow==start.Nrow)&(c.Ncol==start.Ncol))
 		{
 			break;
@@ -296,7 +299,8 @@ void a_star(Node *start, Node *destination)
 				neighbours1[pind].Pcol=current.Ncol;
 				
 				closedList->push_back(neighbours1[pind]);
-				printPath(*closedList,*start);	
+				printPath(*closedList,*start);
+				printmatrix();
 				//FREE memory 
 				delete closedList;
 				delete neighbours1;
@@ -368,11 +372,22 @@ void printmatrix()
 	for(int i=0;i<ROW;i++)
 	{
 	       for(int c=0;c<COL;c++)
-	       {
-	       		cout <<" "<<matrix[i*ROW+c];
-	       	
-	       }
-	       
+	       {	
+				Node toPrint;
+				toPrint.Nrow=i;
+				toPrint.Ncol=c;
+				if(toSearch(toPrint,printList)!=-1)
+				{
+					cout<< " x ";
+				}
+				else
+				{
+					if(matrix[i*ROW+c]==1)
+						cout <<" . ";
+					else
+						cout<< " 0 "; 
+				}
+		   }
 	   cout<<"\n";  
 	}
 	cout<<"\n";	
