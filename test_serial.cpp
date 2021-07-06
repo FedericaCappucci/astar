@@ -63,11 +63,6 @@ struct Node
 	   
 };
 list<Node> printList; //this will contain the path to print( just for graphic not usefull for the algorithm)  	
-/* 
- This struct will contain:
-	-The number of thread that have founded the path
-	-the cost of the path founded if there is one.
-*/
 
 // This function will be called when the memory is not enough to allocate dynamically space (usefull only with "new" operator)
 void no_memory()
@@ -75,7 +70,6 @@ void no_memory()
 	cout<<"not enough memory";
 	exit (1);
 }
-
 /*
 	Overloaded function
 	Search find the only occurrance of a given node into a set.
@@ -151,17 +145,13 @@ Node * setNeighbours(Node current, int *c)
 				{
 					neighbours_array[count].Nrow=i;
 					neighbours_array[count].Ncol=j;
-					
-					//*(neighbours+count)=tmp;
-					
-					//cout <<"\n boh "<<neighbours_array[count].Nrow<<"  "<<neighbours_array[count].Ncol <<"\n";
+
 					count += 1;
 				}
 			}
 		}
 	}
 	*c= count;
-	//array_neigh = neighbours_array;
 	return neighbours_array;	
 }
 
@@ -176,10 +166,7 @@ Node * setNeighbours(Node current, int *c)
 */
 bool isValid(int row, int col)
 {
-    // Returns true if row number and column number
-    // is in range
-    return ((row >= 0) && (row < ROW) && (col >= 0)
-           && (col < COL)) &&(matrix[row*ROW+col]!=0); //if matrix[][] =0 the is an obstacle
+    return ((row >= 0) && (row < ROW) && (col >= 0)&& (col < COL)) &&(matrix[row*ROW+col]!=0); //if matrix[i][j] =0 the is a blocking node
 }
 
 /*
@@ -363,16 +350,17 @@ void a_star(Node *start, Node *destination)
 			neighbours1[pind].g=current.g+1;
 			neighbours1[pind].h=heuristic(&neighbours1[pind],destination);
 					
-			if(isDestination(neighbours1[pind],*destination))
+			if(isDestination(neighbours1[pind],*destination)) //if destination is reached
 			{
 				cout<<"DESTINATION REACHED!\n";
 				//set destination parent node
 				neighbours1[pind].Prow=current.Nrow;
 				neighbours1[pind].Pcol=current.Ncol;
 				
+				// put destination in visited nodes
 				closedList->push_back(neighbours1[pind]);
 				printPath(*closedList,*start);
-				printmatrix();
+			//	printmatrix();
 				//FREE memory 
 				delete closedList;
 				delete neighbours1;
