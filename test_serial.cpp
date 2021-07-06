@@ -16,7 +16,7 @@ int COL;
 //This will contain the grid read from the file "Matrix.txt"
 int *matrix;
 
-list<Node> printList = new list<Node>; //this will contain the path to print( just for graphic not usefull for the algorithm)
+
 
 
 /* Contains all the information about the element of the matrix:
@@ -62,6 +62,7 @@ struct Node
 	
 	   
 };
+list<Node> printList = new list<Node>; //this will contain the path to print( just for graphic not usefull for the algorithm)  	
 /* 
  This struct will contain:
 	-The number of thread that have founded the path
@@ -247,6 +248,76 @@ void printPath(list<Node> closedList,Node start)
 }
 
 /*
+	printmatrix: prints on screen the read or generated grid.
+*/
+void printmatrix()
+{
+	for(int i=0;i<ROW;i++)
+	{
+	       for(int c=0;c<COL;c++)
+	       {	
+				Node toPrint;
+				toPrint.Nrow=i;
+				toPrint.Ncol=c;
+				if(Search(toPrint,printList)!=-1)
+				{
+					cout<< " x ";
+				}
+				else
+				{
+					if(matrix[i*ROW+c]==1)
+						cout <<" . ";
+					else
+						cout<< " 0 "; 
+				}
+		   }
+	   cout<<"\n";  
+	}
+	cout<<"\n";	
+}
+/*
+	readPath: used to read a file containing the grid to fill the matrix
+	INPUTS: 
+		-String fileName: the name of file to read, in this case it will be "Matrix.txt"
+	OUTPUT:
+		-int matrix [ROW][COL]: it is a global variable so it is just filled, doesn't need return value.	
+*/
+bool readPath(string fileName)
+{
+	char c;
+	int num;
+	int i=0;
+	int j=0;
+	ifstream fin(fileName);
+	if(fin.is_open())
+	{
+	
+		while(fin.get(c))
+		{
+			if(c != '\n')
+			{
+				//to cast from char to number
+				num= (int) c-48;
+				matrix[i*ROW + j] = num;
+				j++;
+			}
+			else
+			{
+				i++;
+				j=0;
+			}	
+		}
+		fin.close();
+		return true;
+	}
+	else
+	{
+		cout << "The file doesn't exist!\n";
+		return false;
+	}
+}
+
+/*
 	a_star: compute astar alghorithm by calling all the auxiliary functions
 	INPUTS: 
 		-Node *start: pointer to the initial node from where we want to start to search
@@ -299,8 +370,7 @@ void a_star(Node *start, Node *destination)
 				neighbours1[pind].Pcol=current.Ncol;
 				
 				closedList->push_back(neighbours1[pind]);
-				printPath(*closedList,*start);
-				printmatrix();
+				printPath(*closedList,*start);	
 				//FREE memory 
 				delete closedList;
 				delete neighbours1;
@@ -361,76 +431,6 @@ void a_star(Node *start, Node *destination)
 				break;
 		}
 
-	}
-}
-
-/*
-	printmatrix: prints on screen the read or generated grid.
-*/
-void printmatrix()
-{
-	for(int i=0;i<ROW;i++)
-	{
-	       for(int c=0;c<COL;c++)
-	       {	
-				Node toPrint;
-				toPrint.Nrow=i;
-				toPrint.Ncol=c;
-				if(toSearch(toPrint,printList)!=-1)
-				{
-					cout<< " x ";
-				}
-				else
-				{
-					if(matrix[i*ROW+c]==1)
-						cout <<" . ";
-					else
-						cout<< " 0 "; 
-				}
-		   }
-	   cout<<"\n";  
-	}
-	cout<<"\n";	
-}
-/*
-	readPath: used to read a file containing the grid to fill the matrix
-	INPUTS: 
-		-String fileName: the name of file to read, in this case it will be "Matrix.txt"
-	OUTPUT:
-		-int matrix [ROW][COL]: it is a global variable so it is just filled, doesn't need return value.	
-*/
-bool readPath(string fileName)
-{
-	char c;
-	int num;
-	int i=0;
-	int j=0;
-	ifstream fin(fileName);
-	if(fin.is_open())
-	{
-	
-		while(fin.get(c))
-		{
-			if(c != '\n')
-			{
-				//to cast from char to number
-				num= (int) c-48;
-				matrix[i*ROW + j] = num;
-				j++;
-			}
-			else
-			{
-				i++;
-				j=0;
-			}	
-		}
-		fin.close();
-		return true;
-	}
-	else
-	{
-		cout << "The file doesn't exist!\n";
-		return false;
 	}
 }
 
