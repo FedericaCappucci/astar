@@ -356,7 +356,7 @@ void a_star(Node *start, Node *destination)
 									//save the information about thread that found the path and about cost
 									int nThread = omp_get_thread_num();
 									double cost=neighbours1[pind].g;
-									printPath(*closedList,*start);
+									//printPath(*closedList,*start);
 									path_array[neg].cost=cost;
 									path_array[neg].numThread=nThread;
 									
