@@ -62,7 +62,7 @@ struct Node
 	
 	   
 };
-list<Node> printList = new list<Node>; //this will contain the path to print( just for graphic not usefull for the algorithm)  	
+list<Node> printList; //this will contain the path to print( just for graphic not usefull for the algorithm)  	
 /* 
  This struct will contain:
 	-The number of thread that have founded the path
@@ -230,7 +230,7 @@ void printPath(list<Node> closedList,Node start)
 	{
 		
 		cout << "(" << c.Nrow << "," << c.Ncol <<") ->";
-		toPrint.insert(c);
+		printList.push_back(c);
 		if((c.Nrow==start.Nrow)&(c.Ncol==start.Ncol))
 		{
 			break;
