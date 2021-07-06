@@ -33,7 +33,7 @@ struct Node
     
 
     public:
-    //This is needed to compare 2 nodes using their cost function f
+		//This is needed to compare 2 nodes using their cost function f
 	    bool operator<(const Node& other )const
 	    {
 	    	if((Ncol==other.Ncol)&&(Nrow==other.Nrow))
@@ -384,32 +384,39 @@ void printmatrix()
 	OUTPUT:
 		-int matrix [ROW][COL]: it is a global variable so it is just filled, doesn't need return value.	
 */
-void readPath(string fileName)
+bool readPath(string fileName)
 {
 	char c;
 	int num;
 	int i=0;
 	int j=0;
 	ifstream fin(fileName);
-	//add file not exist error
-	
-	while(fin.get(c))
+	if(fin.is_open())
 	{
-		if(c != '\n')
-		{
-			//to cast from char to number
-			num= (int) c-48;
-			matrix[i*ROW + j] = num;
-			j++;
-		}
-		else
-		{
-			i++;
-			j=0;
-		}	
-	}
-	fin.close();
 	
+		while(fin.get(c))
+		{
+			if(c != '\n')
+			{
+				//to cast from char to number
+				num= (int) c-48;
+				matrix[i*ROW + j] = num;
+				j++;
+			}
+			else
+			{
+				i++;
+				j=0;
+			}	
+		}
+		fin.close();
+		return true;
+	}
+	else
+	{
+		cout << "The file doesn't exist!\n";
+		return false;
+	}
 }
 
 /* Inputs from command line:
@@ -439,23 +446,28 @@ int main(int argc, char * argv[])
 		//read matrix choice
 		if(argv[3][0]=='f')
 		{
-			readPath("Matrix.txt");
-			cout << "File read!\n";
+			if(readPath("Matrix.txt"))
+				cout << "File read!\n";
+			else
+				return 5;
 		}
 		else
 		{
 			generateMatrix(ROW,COL);
 			writeFile(ROW,COL);
 			cout << "Grid generated!\n";
-			readPath("Matrix.txt");
+			if(!readPath("Matrix.txt")) //if file can't be read stop the execution
+			{
+				return 5;
+			}
 		}
 		
     	
-		// set start and destination node: 
+		// declare start and destination nodes: 
 		Node start;
 		Node dest;
 		
-		//checks if the start node is valid ( valid means in range(ROW,COL) and is not a blocking element
+		//checks if the start node is valid (valid means in range(ROW,COL) and is not a blocking element)
 		if(isValid(atoi(argv[4]),atoi(argv[5]))==false)
 		{
 			cout <<"Invalid start";
