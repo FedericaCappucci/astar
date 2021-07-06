@@ -245,6 +245,7 @@ void printPath(list<Node> closedList,Node start)
 		advance(beg,pos);
 		c=*beg;		
 	}
+	cout<<"\n";
 }
 
 /*
