@@ -360,7 +360,7 @@ void a_star(Node *start, Node *destination)
 				// put destination in visited nodes
 				closedList->push_back(neighbours1[pind]);
 				printPath(*closedList,*start);
-			//	printmatrix();
+				printmatrix();
 				//FREE memory 
 				delete closedList;
 				delete neighbours1;
