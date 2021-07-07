@@ -74,11 +74,11 @@ void writeFile(int ROW,int COL)
 	
 }
 
-/*int main()
+int main()
 {
-	generateMatrix(5000,5000);
-	writeFile(5000,5000);
+	generateMatrix(4000,4000);
+	writeFile(4000,4000);
 	return 0;
-}*/
+}
 
 
