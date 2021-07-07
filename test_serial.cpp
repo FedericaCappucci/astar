@@ -423,6 +423,11 @@ void a_star(Node *start, Node *destination)
 		}
 
 	}
+	if(found==false)
+	{
+		cout<<"Can't reach the destination!";
+		printmatrix();
+	}
 }
 
 /* Inputs from command line:
