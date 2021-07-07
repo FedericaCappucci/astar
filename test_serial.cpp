@@ -425,7 +425,7 @@ void a_star(Node *start, Node *destination)
 	}
 	if(found==false)
 	{
-		cout<<"Can't reach the destination!";
+		cout<<"Can't reach the destination!\n";
 		printmatrix();
 	}
 }
