@@ -73,7 +73,7 @@ void writeFile(int ROW,int COL)
   }
 	
 }
-
+//uncoment if you want to generete the matrix from here
 /*int main()
 {
 	generateMatrix(4000,4000);
